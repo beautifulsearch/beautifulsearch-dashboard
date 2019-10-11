@@ -2,8 +2,8 @@ require 'sinatra/base'
 require 'sinatra/reloader'
 require 'sinatra/namespace'
 
-require_relative 'controllers/dashboard_controller'
-require_relative 'controllers/collections_controller'
+require_relative 'dashboard/controller'
+require_relative 'collections/controller'
 
 class App < Sinatra::Base
   set :root, File.dirname(__FILE__)

@@ -2,8 +2,8 @@ require 'sinatra/base'
 require 'sinatra/reloader'
 require 'sinatra/namespace'
 
-require_relative 'lib/dashboard/controller'
-require_relative 'lib/collections/controller'
+require_relative 'lib/dashboard/dashboard_controller'
+require_relative 'lib/collections/collections_controller'
 
 # This value can come from some other place
 # based on which plugin mount and template lookup will be done

@@ -18,6 +18,8 @@ class App < Sinatra::Base
   helpers do
     def find_template(views, name, engine, &block)
       Array(views).each { |v| super(v, name, engine, &block) }
+      # search in root layouts if not found inside individual plugins
+      super('layouts', name, engine, &block
     end
   end
 
@@ -25,11 +27,11 @@ class App < Sinatra::Base
   # NOTE: autoload created subtle bugs when files were updated
   # require File.join(root, '/config/initializers/autoloader.rb')
 
-  enable :sessions, :logging, :static, :dump_errors
+  enable :sessions, :logging, :static
 
   # configure reloader in developerment environment only
   configure :development do
-    enable :reloader
+    enable :reloader, :dump_errors
     register Sinatra::Reloader
     also_reload 'models/*.rb'
     also_reload 'helpers/*.rb'

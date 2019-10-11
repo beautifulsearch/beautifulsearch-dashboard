@@ -1,4 +1,4 @@
-require_relative '../models/instance'
+require_relative '../../models/instance'
 
 module BeautifulSearch
   module DashboardController

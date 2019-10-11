@@ -2,8 +2,8 @@ require 'sinatra/base'
 require 'sinatra/reloader'
 require 'sinatra/namespace'
 
-require_relative 'dashboard/controller'
-require_relative 'collections/controller'
+require_relative 'lib/dashboard/controller'
+require_relative 'lib/collections/controller'
 
 class App < Sinatra::Base
   set :root, File.dirname(__FILE__)
@@ -17,7 +17,7 @@ class App < Sinatra::Base
     # configure reloader in developerment environment only
     register Sinatra::Reloader
     # enable reloading for non-modules like models and services
-    also_reload 'collections/*.rb'
+    also_reload 'lib/**/*.rb'
     also_reload 'models/*.rb'
     also_reload 'helpers/*.rb'
   end

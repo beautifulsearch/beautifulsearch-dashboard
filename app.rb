@@ -9,8 +9,6 @@ class App < Sinatra::Base
 
   enable :sessions, :logging, :static
 
-  register Sinatra::Namespace
-
   configure :development do
     # configure reloader in developerment environment only
     register Sinatra::Reloader

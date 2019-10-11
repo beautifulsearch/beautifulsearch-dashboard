@@ -1,11 +1,15 @@
 module BeautifulSearch
   module DashboardController
     def self.registered(app)
+      app.register Sinatra::Namespace
+
       home = lambda do
         ::Instance.help
       end
 
-      app.get '/dashboard', &home
+      app.namespace '/dashboard' do
+        get '', &home
+      end
     end
   end
 end

@@ -3,10 +3,8 @@ require_relative '../../models/instance'
 module BeautifulSearch
   module DashboardController
     def self.registered(app)
-      app.register Sinatra::Namespace
-
       home = lambda do
-        Instance.help
+        erb :dashboard_home
       end
 
       app.namespace '/dashboard' do

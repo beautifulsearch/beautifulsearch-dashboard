@@ -2,7 +2,7 @@ module BeautifulSearch
   module CollectionsController
     def self.registered(app)
       home = lambda do
-        "Collection list!!"
+         erb :collections_home
       end
 
       app.get '/collections', &home

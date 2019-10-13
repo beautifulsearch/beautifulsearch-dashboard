@@ -19,7 +19,7 @@ class App < Sinatra::Base
     def find_template(views, name, engine, &block)
       Array(views).each { |v| super(v, name, engine, &block) }
       # search in root layouts if not found inside individual plugins
-      super('layouts', name, engine, &block
+      super('layouts', name, engine, &block)
     end
   end
 
@@ -29,7 +29,6 @@ class App < Sinatra::Base
 
   enable :sessions, :logging, :static
 
-  # configure reloader in developerment environment only
   configure :development do
     enable :reloader, :dump_errors
     register Sinatra::Reloader
@@ -38,10 +37,10 @@ class App < Sinatra::Base
     also_reload 'lib/**/*.rb'
   end
 
-  # register user defined helpers
+  # user defined helpers
   # helper BeautifulSearch::Helpers::Dashboard
 
-  # register user defined controllers
+  # user defined controllers
   register BeautifulSearch::DashboardController
   register BeautifulSearch::CollectionsController
 end

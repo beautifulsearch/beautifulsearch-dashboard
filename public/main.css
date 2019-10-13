@@ -19,8 +19,8 @@ body {
 }
 
 .nav__title {
-  padding: 20px;
-  font-size: var(--xl);
+  font-size: var(--xl2);
+  margin-left: var(--spacing-4);)
 }
 
 .nav__links a {
@@ -28,7 +28,6 @@ body {
   color: var(--white);
   font-weight: var(--bold);
   display: inline-block;
-  margin: 10px;
   padding: 20px;
 }
 

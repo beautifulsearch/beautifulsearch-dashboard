@@ -6,7 +6,7 @@ module BeautifulSearch
       app.register Sinatra::Namespace
 
       home = lambda do
-        erb :dashboard_home
+        erb :dashboard_home, layout: :application
       end
 
       app.namespace '/dashboard' do

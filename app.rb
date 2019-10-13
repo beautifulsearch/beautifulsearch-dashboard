@@ -30,7 +30,7 @@ class App < Sinatra::Base
   enable :sessions, :logging, :static
 
   configure :development do
-    enable :reloader, :dump_errors
+    enable :reloader, :dump_errors, :raise_errors
     register Sinatra::Reloader
     also_reload 'models/*.rb'
     also_reload 'helpers/*.rb'

@@ -1,0 +1,35 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: var(--sans);
+}
+
+.nav {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  background: var(--blue-dark);
+  color: var(--white);
+}
+
+.nav__links {
+  width: 100%;
+  display: flex;
+  justify-content: right;
+}
+
+.nav__title {
+  padding: 20px;
+  font-size: var(--xl);
+}
+
+.nav__links a {
+  text-decoration: none;
+  color: var(--white);
+  font-weight: var(--bold);
+  display: inline-block;
+  margin: 10px;
+  padding: 20px;
+}
+
+

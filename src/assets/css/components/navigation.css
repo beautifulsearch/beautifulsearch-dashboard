@@ -1,6 +1,6 @@
 .nav {
   display: flex;
-  background: var(--grey-lighter);
+  background: var(--white);
   align-items: center;
   justify-content: space-between;
   padding: 0 var(--spacing-4);

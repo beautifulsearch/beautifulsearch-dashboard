@@ -1,7 +1,79 @@
 body {
   font-family: var(--sans);
+  background: var(--grey-lightest);
+}
+
+input {
+  border: 1px solid var(--grey);
+  padding: var(--spacing-3) var(--spacing-2);
+  border-radius: var(--border-4);
+}
+
+button {
+  padding: var(--spacing-3) var(--spacing-6);
+  border: none;
+  border-radius: var(--border-4);
+  cursor: pointer;
+}
+
+button:hover {
+  box-shadow: var(--shadow-lg);
+}
+
+button:disabled {
+  opacity: var(--opacity-75);
+  cursor: not-allowed;
+}
+
+.button--primary {
+  background: var(--black);
+  color: var(--white);
 }
 
 .matter {
   padding-top: var(--spacing-4);
+}
+
+
+/* home view css */
+.home__container {
+  margin: var(--spacing-4);
+  display: flex;
+  justify-content: center;
+}
+
+.connection__box {
+  background: var(--white);
+  width: var(--tablet);
+  box-shadow: var(--shadow-default);
+  padding: var(--spacing-8);
+}
+
+.connection__welcome-text {
+  text-transform: uppercase;
+  color: var(--grey-darker);
+}
+
+.connection__headline {
+  margin-top: var(--spacing-8);
+  font-weight: var(--bold);
+  color: var(--grey-darkest);
+  margin-bottom: 0;
+}
+
+.connection__subheading {
+  margin-top: var(--spacing-4);
+  color: var(--grey-dark);
+  font-weight: var(--light);
+  font-size: var(--lg);
+}
+
+.connection__url {
+  display: block;
+  width: 100%;
+}
+
+.connection__button {
+  display: block;
+  margin-top: var(--spacing-4);
 }

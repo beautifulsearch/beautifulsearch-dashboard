@@ -1,0 +1,23 @@
+.nav {
+  display: flex;
+  background: var(--grey-lighter);
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 var(--spacing-4);
+}
+
+.nav__title {
+  font-size: var(--xl2);
+}
+
+.nav__link {
+  text-decoration: none;
+  font-weight: var(--semibold);
+  color: var(--black);
+  margin-left: var(--spacing-6);
+  padding: var(--spacing-2);
+}
+
+.nav__link:hover {
+  opacity: var(--opacity-75);
+}

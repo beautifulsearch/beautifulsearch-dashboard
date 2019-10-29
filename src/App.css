@@ -39,14 +39,18 @@ button:disabled {
 .home__container {
   margin: var(--spacing-4);
   display: flex;
+  flex-direction: column;
   justify-content: center;
 }
 
 .connection__box {
   background: var(--white);
-  width: var(--tablet);
+  max-width: var(--tablet);
+  width: 100%;
   box-shadow: var(--shadow-default);
   padding: var(--spacing-8);
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .connection__welcome-text {
@@ -76,4 +80,35 @@ button:disabled {
 .connection__button {
   display: block;
   margin-top: var(--spacing-4);
+}
+
+
+.core__list {
+  margin-top: var(--spacing-8);
+  display: flex;
+  flex-direction: column;
+  background: var(--white);
+  padding: var(--spacing-4);
+  max-width: var(--tablet);
+  width: 100%;
+  box-shadow: var(--shadow-default);
+  padding: var(--spacing-8);
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.core__item {
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  padding: var(--spacing-3) 0;
+}
+
+.core__item > label {
+  font-size: var(--base);
+  font-weight: var(--semibold);
+}
+
+.core__item input {
+  margin-right: var(--spacing-3);
 }

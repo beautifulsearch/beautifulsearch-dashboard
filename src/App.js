@@ -1,10 +1,9 @@
-import React, { useEffect } from 'react';
+import React, { useState } from 'react';
 import { BrowserRouter as Router, Switch, Route, } from "react-router-dom";
 
 import Navigation from './components/Navigation';
 import Home from './views/Home';
-
-import Solr from './services/solr';
+import Schema from './views/Schema';
 
 // might want to move all the style file imports to styles.js file :)
 import './assets/css/normalizer.css';
@@ -13,17 +12,12 @@ import './App.css';
 import './assets/css/components/navigation.css';
 
 function App() {
-  const solr = new Solr('gettingstarted');
-
-  const fetchSchema = async () => {
-    const response = await solr.getSchema();
-    console.log(response);
-  }
-
-  useEffect(() => {
-    fetchSchema();
-  }, [])
-
+  const [appState, setAppState] = useState({
+    instances: [],
+    instance: localStorage.getItem("instance") || "",
+    cores: [],
+    core: localStorage.getItem("core") || ""
+  });
 
   return (
     <Router>
@@ -32,8 +26,11 @@ function App() {
 
         <div className="matter">
           <Switch>
-            <Route path="/">
-              <Home />
+            <Route exact path="/">
+              <Home appState={appState} setAppState={setAppState}/>
+            </Route>
+            <Route exact path="/schema">
+              <Schema />
             </Route>
           </Switch>
         </div>

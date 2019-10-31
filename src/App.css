@@ -30,6 +30,12 @@ button:disabled {
   color: var(--white);
 }
 
+.button--secondary {
+  background-color: var(--white);
+  color: var(--grey-dark);
+  border: 1px solid;
+}
+
 .matter {
   padding-top: var(--spacing-4);
 }
@@ -111,4 +117,114 @@ button:disabled {
 
 .core__item input {
   margin-right: var(--spacing-3);
+}
+
+
+/* schema view css */
+.schema {
+  background-color: white;
+  margin: var(--spacing-8);
+}
+
+.schema__container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  margin: var(--spacing-4);
+  padding: var(--spacing-6);
+}
+
+.schema__welcome-text {
+  color: #1e2328;
+  font-weight: var(--thin);
+  font-size: var(--xl4);
+  margin: 0;
+}
+
+.schema__headline {
+  color: #647487;
+  margin-top: var(--spacing-3);
+}
+
+.create-schema__button {
+  display: block;
+  margin-top: var(--spacing-4);
+  margin-left: var(--spacing-6);
+  box-shadow: var(--shadow-default);
+}
+
+.schema-attribute__container {
+  display: flex;
+  flex-direction: column;
+  margin: var(--spacing-20) var(--spacing-32);
+}
+
+.schema__attribute {
+  color: #1e2328;
+  line-height: 60px;
+  border-bottom: 1px solid var(--grey-lighter);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.schema__attribute:last-child {
+  border-bottom: none;
+  margin-bottom: var(--spacing-4);
+}
+
+.attribute__value {
+  background-color: var(--white);
+  padding: var(--spacing-2);
+  color: #3b454f;
+  border: 1px solid var(--grey);
+  float: right;
+  border-radius: var(--border-2);
+}
+
+/* Documents View Css */
+
+.documents {
+  background-color: var(--white);
+  margin: var(--spacing-8);
+}
+
+.documents__container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin: var(--spacing-4);
+  padding: var(--spacing-6);
+}
+
+.documents__welcome-text {
+  color: #1e2328;
+  font-weight: var(--thin);
+  font-size: var(--xl4);
+  margin: 0;
+}
+
+.documents-attribute__container {
+  display: flex;
+  flex-direction: column;
+}
+
+.documents-attribute__table {
+  width: 100%;
+}
+
+.documents__attributes {
+  margin: var(--spacing-10);
+  border-radius: var(--border-2);
+  border: 1px solid var(--grey-lighter);
+  box-shadow: var(--shadow-default);
+  padding: 0 var(--spacing-4);
+}
+
+.document__attribute {
+  color: #3B454F;
+  display: grid;
+  grid-template-columns: calc(35% + 55px) 30px 1fr;
+  grid-gap: 4px;
 }

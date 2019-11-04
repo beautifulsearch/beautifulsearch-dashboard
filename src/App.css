@@ -159,6 +159,10 @@ button:disabled {
   margin: var(--spacing-20) var(--spacing-32);
 }
 
+.schema-container__table {
+  width: 100%;
+}
+
 .schema__attribute {
   color: #1e2328;
   line-height: 60px;

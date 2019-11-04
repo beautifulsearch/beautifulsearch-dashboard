@@ -46,7 +46,7 @@ export default function Schema() {
         </div>
       </div>
       <div className="schema-attribute__container">
-        <table>
+        <table className="schema-container__table">
           <tbody>
             { schemaAttributesToReturn }
           </tbody>

@@ -52,8 +52,11 @@ export default function Schema() {
     return fieldTypes.filter(ft => !ft.name.startsWith('_'));
   }
 
-  const onFieldTypeChange = (index, attribute, type) => {
-    console.log(index, attribute, type);
+  const onFieldTypeChange = (attribute, type) => {
+    const schemeAttributesClone = [...schemaAttributes];
+    const index = schemeAttributesClone.findIndex((a) => a.name === attribute);
+    schemeAttributesClone[index].type = type;
+    setSchemaAttributes([...schemeAttributesClone]);
   }
 
   return (
@@ -81,7 +84,7 @@ export default function Schema() {
               <tr className="schema__attribute" key={a.name}>
                 <td>{a.name}</td>
                 <td>
-                  <select className="attribute__value" value={a.type} onChange={(e) => onFieldTypeChange(index, a.name, e.target.value)}>
+                  <select className="attribute__value" value={a.type} onChange={(e) => onFieldTypeChange(a.name, e.target.value)}>
                     {
                       filteredFieldTypes().map( ft => (
                         <option value={ft.name} key={ft.name}>{ft.name}</option>

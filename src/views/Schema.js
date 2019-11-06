@@ -69,6 +69,7 @@ export default function Schema() {
       await solr.addFields(newField);
       setNewField({name: '', type: ''});
       toggleAddFieldModal(false);
+      fetchSchemaAttributes();
       cogoToast.success("New field addedd successfully");
     } catch(e) {
       cogoToast.error("Failed to add new field");

@@ -232,3 +232,36 @@ button:disabled {
   grid-template-columns: calc(35% + 55px) 30px 1fr;
   grid-gap: 4px;
 }
+
+.modal__overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  /* background-color: #fff0; */
+  /* background: white; */
+  background: var(--grey-lightest);
+}
+
+.modal__content {
+  position: absolute;
+  top: 80px;
+  left: 40px;
+  right: 40px;
+  bottom: 40px;
+  background-color: var(--white);
+  padding: var(--spacing-4);
+}
+
+
+.form__row {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: var(--spacing-4);
+}
+
+.form__row label {
+  font-weight: var(--bold);
+  padding-bottom: var(--spacing-4);
+}

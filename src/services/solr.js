@@ -17,19 +17,30 @@ export default class Solr {
     });
   }
 
-  getSchema(core=this.core) {
+  getSchema() {
     // return this.instance.get(`/api/cores/${core}/schema`);
-    return this.instance.get(`/${core}/schema/fields`);
+    return this.instance.get(`/${this.core}/schema/fields`);
   }
 
-  getFields(core=this.core) {
-    return this.instance.get(`/${core}/schema/fieldtypes`);
+  getFields() {
+    return this.instance.get(`/${this.core}/schema/fieldtypes`);
   }
 
-  getStatus(core=this.core) {
+  addFields(defination) {
+    const params = {
+      "add-field": {
+        ...defination,
+        stored: true
+      }
+    }
+
+    return this.instance.post(`/${this.core}/schema`, params);
+  }
+
+  getStatus() {
     // return this.instance.get('/api/cores');
     const params = {
-      core,
+      core: this.core,
       action: "STATUS"
     };
 

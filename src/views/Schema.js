@@ -1,11 +1,13 @@
 import React, {useEffect, useState} from "react";
 import Modal from 'react-modal';
+import cogoToast from "cogo-toast";
 import Solr from '../services/solr';
 
 export default function Schema() {
   const [schemaAttributes, setSchemaAttributes] = useState([]);
   const [fieldTypes, setFieldTypes] = useState([]);
   const [showingAddFieldModal, toggleAddFieldModal ] = useState(false);
+  const [newField, setNewField] = useState({name: '', type: ''});
 
   // schema
   const fetchSchemaAttributes = async () => {
@@ -50,8 +52,27 @@ export default function Schema() {
     // network call to update the schema changes
   }
 
-  const createNewAttribute = async (name, type) => {
-    // netowrk call to create the new field in the schema
+  const createNewAttribute = async () => {
+    const { name, type } = newField;
+    if (!name) {
+      cogoToast.warn("Name is required to add a field");
+      return;
+    }
+
+    if (!type) {
+      cogoToast.warn("Type is required to add a field");
+      return;
+    }
+
+    const solr = new Solr();
+    try {
+      await solr.addFields(newField);
+      setNewField({name: '', type: ''});
+      toggleAddFieldModal(false);
+      cogoToast.success("New field addedd successfully");
+    } catch(e) {
+      cogoToast.error("Failed to add new field");
+    }
   }
 
   return (
@@ -111,24 +132,35 @@ export default function Schema() {
 
         <div className="form__row">
           <label>Field Name</label>
-          <input />
+          <input
+            placeholder="field_name"
+            onChange={e => setNewField({ ...newField, name: e.target.value })}
+          />
         </div>
 
         <div className="form__row">
           <label>Field Type</label>
-          <input />
+          <select
+            className="attribute__value"
+            value={newField.type}
+            onChange={e => setNewField({ ...newField, type: e.target.value })}
+          >
+            {filteredFieldTypes().map(ft => (
+              <option value={ft.name} key={ft.name}>
+                {ft.name}
+              </option>
+            ))}
+          </select>
         </div>
 
-        <div style={{marginTop: 40}}>
-          <button
-            className="button--primary"
-          >
+        <div style={{ marginTop: 40 }}>
+          <button className="button--primary" onClick={createNewAttribute}>
             Add Field
           </button>
           <button
             className="button--secondary"
             onClick={() => toggleAddFieldModal(false)}
-            style={{marginLeft: 20}}
+            style={{ marginLeft: 20 }}
           >
             Close Modal
           </button>

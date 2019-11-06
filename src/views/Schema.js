@@ -1,22 +1,6 @@
 import React, {useEffect, useState} from "react";
 import Solr from '../services/solr';
 
-// schemaAttributes.forEach((val, index) => {
-//   schemaAttributesToReturn.push(
-    // <tr className="schema__attribute" key={index}>
-    //   <td>{val}</td>
-    //   <td>
-    //     <select className="attribute__value">
-    //       <option>{attributeValue[0]}</option>
-    //       <option>{attributeValue[1]}</option>
-    //       <option>{attributeValue[2]}</option>
-    //       <option>{attributeValue[3]}</option>
-    //     </select>
-    //   </td>
-    // </tr>
-// });
-
-
 export default function Schema() {
   const [schemaAttributes, setSchemaAttributes] = useState([]);
   const [fieldTypes, setFieldTypes] = useState([]);
@@ -57,6 +41,15 @@ export default function Schema() {
     const index = schemeAttributesClone.findIndex((a) => a.name === attribute);
     schemeAttributesClone[index].type = type;
     setSchemaAttributes([...schemeAttributesClone]);
+  }
+
+  const syncSchemaChagne = async () => {
+    // confirm
+    // network call to update the schema changes
+  }
+
+  const createNewAttribute = async (name, type) => {
+    // netowrk call to create the new field in the schema
   }
 
   return (

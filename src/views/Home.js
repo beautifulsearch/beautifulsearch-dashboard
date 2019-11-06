@@ -1,5 +1,6 @@
 import React from 'react';
 import { useHistory } from "react-router-dom";
+import cogoToast from "cogo-toast";
 
 import Solr from "../services/solr";
 
@@ -19,14 +20,19 @@ export default function Home({ appState, setAppState }) {
     // will be used by the solr service to make requests
     localStorage.setItem('instance', instance);
 
-    const solr = new Solr();
-    const { data } = await solr.getStatus();
-    const cores = Object.keys(data.status);
-    setAppState({
-      ...appState,
-      cores,
-      core: "",
-    });
+    try {
+      const solr = new Solr();
+      const { data } = await solr.getStatus();
+      const cores = Object.keys(data.status);
+      cogoToast.success("Connection to Solr successful");
+      setAppState({
+        ...appState,
+        cores,
+        core: "",
+      });
+    } catch(e) {
+      cogoToast.error("Failed to connect to the Solr instance");
+    }
   }
 
   const onCoreChange = e => {
@@ -36,7 +42,6 @@ export default function Home({ appState, setAppState }) {
       ...appState,
       core
     });
-
     history.push('/schema');
   }
 

@@ -20,8 +20,10 @@ export default function Home({ appState, setAppState }) {
     // will be used by the solr service to make requests
     localStorage.setItem('instance', instance);
 
+
     try {
       const solr = new Solr();
+      if (!solr) return;
       const { data } = await solr.getStatus();
       const cores = Object.keys(data.status);
       cogoToast.success("Connection to Solr successful");
@@ -31,7 +33,7 @@ export default function Home({ appState, setAppState }) {
         core: "",
       });
     } catch(e) {
-      cogoToast.error("Failed to connect to the Solr instance");
+      cogoToast.error(e.message || "Failed to connect to the Solr instance");
     }
   }
 

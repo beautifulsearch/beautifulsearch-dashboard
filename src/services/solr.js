@@ -1,21 +1,22 @@
 import axios from 'axios';
-import cogoToast from "cogo-toast";
 
 export default class Solr {
   constructor(core) {
     this.core = core || localStorage.getItem('core');
     let url = localStorage.getItem('instance');
-
-    try {
-      url = new URL(url);
-      url = url.origin;
-      const baseURL = `${url}/solr`;
-      this.instance = axios.create({
-        baseURL,
-      });
-    } catch (e) {
-      cogoToast.error(e.message);
+    // validate url for http(s)
+    var pattern = /^((http|https):\/\/)/;
+    if (!pattern.test(url)) {
+      throw new Error("URL should start with http:// or https://");
     }
+
+    url = new URL(url);
+    url = url.origin;
+    console.log(url);
+    const baseURL = `${url}/solr`;
+    this.instance = axios.create({
+      baseURL,
+    });
   }
 
   getSchema() {

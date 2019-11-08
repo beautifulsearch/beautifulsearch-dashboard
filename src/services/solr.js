@@ -9,14 +9,13 @@ export default class Solr {
     try {
       url = new URL(url);
       url = url.origin;
+      const baseURL = `${url}/solr`;
+      this.instance = axios.create({
+        baseURL,
+      });
     } catch (e) {
       cogoToast.error(e.message);
     }
-
-    const baseURL = `${url}/solr`;
-    this.instance = axios.create({
-      baseURL,
-    });
   }
 
   getSchema() {

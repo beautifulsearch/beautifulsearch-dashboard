@@ -1,15 +1,17 @@
 import axios from 'axios';
+import cogoToast from "cogo-toast";
 
 export default class Solr {
   constructor(core) {
     this.core = core || localStorage.getItem('core');
     let url = localStorage.getItem('instance');
-    if (!url) {
-      throw Error('Cannot create a solr instance without a valid url');
-    }
 
-    // remove trailing / as solr is very perticular about the url endpoints
-    // url = url.replace(/\/$/, "");
+    try {
+      url = new URL(url);
+      url = url.origin;
+    } catch (e) {
+      cogoToast.error(e.message);
+    }
 
     const baseURL = `${url}/solr`;
     this.instance = axios.create({

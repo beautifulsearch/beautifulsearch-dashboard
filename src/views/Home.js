@@ -62,6 +62,7 @@ export default function Home({ appState, setAppState }) {
         </h5>
 
         <input
+          type="url"
           className="connection__url"
           placeholder="https://www.mysolr.com"
           value={instance}

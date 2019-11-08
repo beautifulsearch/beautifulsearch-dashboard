@@ -72,6 +72,7 @@ export default function Schema() {
       fetchSchemaAttributes();
       cogoToast.success("New field addedd successfully");
     } catch(e) {
+      console.log(e.message);
       cogoToast.error("Failed to add new field");
     }
   }

@@ -17,8 +17,10 @@ export default function Home({ appState, setAppState }) {
   }
 
   const onConnect = async () => {
+    // when a new connection attempt is made make sure to remove any pre selected core
+    localStorage.removeItem('core');
     // will be used by the solr service to make requests
-    localStorage.setItem('instance', instance);
+    localStorage.setItem('instance', instance.trim());
 
 
     try {
@@ -33,13 +35,14 @@ export default function Home({ appState, setAppState }) {
         core: "",
       });
     } catch(e) {
+      console.log(e);
       cogoToast.error(e.message || "Failed to connect to the Solr instance");
     }
   }
 
   const onCoreChange = e => {
     const core = e.target.value;
-    localStorage.setItem("core", core);
+    localStorage.setItem("core", core.trim());
     setAppState({
       ...appState,
       core

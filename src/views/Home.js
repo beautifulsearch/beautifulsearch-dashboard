@@ -1,39 +1,34 @@
 import React from 'react';
+import { useSelector, useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 import cogoToast from "cogo-toast";
 
 import Solr from "../services/solr";
+import { setInstance, listCores, setCore } from "../store/global";
 
-export default function Home({ appState, setAppState }) {
+export default function Home({ instance, core }) {
+  const dispatch = useDispatch();
   const history = useHistory();
-  const { instance, cores } = appState;
+  const cores = useSelector(state => state.global.cores) || [];
+
 
   const handleInstanceChange = (e) => {
-    const instance = e.target.value;
-    setAppState({
-      ...appState,
-      instance
-    });
+    const instance = e.target.value || "";
+    dispatch(setInstance(instance.trim()));
   }
 
   const onConnect = async () => {
     // when a new connection attempt is made make sure to remove any pre selected core
-    localStorage.removeItem('core');
-    // will be used by the solr service to make requests
-    localStorage.setItem('instance', instance.trim());
-
+    dispatch(setCore(null));
 
     try {
-      const solr = new Solr();
+      const solr = new Solr(instance, core);
       if (!solr) return;
       const { data } = await solr.getStatus();
       const cores = Object.keys(data.status);
       cogoToast.success("Connection to Solr successful");
-      setAppState({
-        ...appState,
-        cores,
-        core: "",
-      });
+      dispatch(listCores(cores));
+      dispatch(setCore(""));
     } catch(e) {
       console.log(e);
       cogoToast.error(e.message || "Failed to connect to the Solr instance");
@@ -41,12 +36,8 @@ export default function Home({ appState, setAppState }) {
   }
 
   const onCoreChange = e => {
-    const core = e.target.value;
-    localStorage.setItem("core", core.trim());
-    setAppState({
-      ...appState,
-      core
-    });
+    const core = e.target.value || "";
+    dispatch(setCore(core.trim()));
     history.push('/schema');
   }
 
@@ -87,7 +78,7 @@ export default function Home({ appState, setAppState }) {
             <div className="core__empty">No Cores Found</div>
           )}
           {cores.map(c => (
-            <div className="core__item">
+            <div className="core__item" key={c}>
               <label>
                 <input
                   type="radio"

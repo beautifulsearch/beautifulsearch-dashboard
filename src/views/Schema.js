@@ -3,7 +3,7 @@ import Modal from 'react-modal';
 import cogoToast from "cogo-toast";
 import Solr from '../services/solr';
 
-export default function Schema() {
+export default function Schema({ instance, core }) {
   const [schemaAttributes, setSchemaAttributes] = useState([]);
   const [fieldTypes, setFieldTypes] = useState([]);
   const [showingAddFieldModal, toggleAddFieldModal ] = useState(false);
@@ -11,7 +11,7 @@ export default function Schema() {
 
   // schema
   const fetchSchemaAttributes = async () => {
-    const solr = new Solr();
+    const solr = new Solr(instance, core);
     const { data } = await solr.getSchema();
     setSchemaAttributes(data.fields);
   }
@@ -27,7 +27,7 @@ export default function Schema() {
 
   // field types
   const fetchFieldTypes = async () => {
-    const solr = new Solr();
+    const solr = new Solr(instance, core);
     const { data } = await solr.getFields();
     setFieldTypes(data.fieldTypes);
   }
@@ -47,10 +47,10 @@ export default function Schema() {
     setSchemaAttributes([...schemeAttributesClone]);
   }
 
-  const syncSchemaChagne = async () => {
-    // confirm
-    // network call to update the schema changes
-  }
+  // const syncSchemaChagne = async () => {
+  //   // confirm
+  //   // network call to update the schema changes
+  // }
 
   const createNewAttribute = async () => {
     const { name, type } = newField;

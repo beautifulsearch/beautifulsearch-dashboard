@@ -1,25 +1,28 @@
 import axios from 'axios';
 
 export default class Solr {
-  constructor(core) {
-    this.core = core || localStorage.getItem('core');
-    let url = localStorage.getItem('instance').trim();
+  constructor(instance="", core) {
+    this.core = core;
+    let url = instance;
+
     // validate url for http(s)
     var pattern = /^((http|https):\/\/)/;
     if (!pattern.test(url)) {
       throw new Error("URL should start with http:// or https://");
     }
 
+    // create url object and extract the base url
     const urlComponent = new URL(url);
     url = urlComponent.origin;
 
+    // setup simple auth if required
     if (urlComponent.username && urlComponent.password) {
       this.auth = {
         username: urlComponent.username,
         password: urlComponent.password
       };
     }
-    console.log(url, this.auth);
+
     const baseURL = `${url}/solr`;
     this.instance = axios.create({
       baseURL,

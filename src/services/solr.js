@@ -30,6 +30,16 @@ export default class Solr {
     });
   }
 
+  getStatus() {
+    // return this.instance.get('/api/cores');
+    const params = {
+      core: this.core,
+      action: "STATUS"
+    };
+
+    return this.instance.get("/admin/cores", { params });
+  }
+
   getSchema() {
     // return this.instance.get(`/api/cores/${core}/schema`);
     return this.instance.get(`/${this.core}/schema/fields`);
@@ -39,7 +49,7 @@ export default class Solr {
     return this.instance.get(`/${this.core}/schema/fieldtypes`);
   }
 
-  addFields(defination) {
+  addField(defination) {
     const params = {
       "add-field": {
         ...defination,
@@ -50,13 +60,13 @@ export default class Solr {
     return this.instance.post(`/${this.core}/schema`, params);
   }
 
-  getStatus() {
-    // return this.instance.get('/api/cores');
+  deleteField(name) {
     const params = {
-      core: this.core,
-      action: "STATUS"
+      "delete-field": {
+        name
+      }
     };
 
-    return this.instance.get("/admin/cores", { params });
+    return this.instance.post(`/${this.core}/schema`, params);
   }
 }

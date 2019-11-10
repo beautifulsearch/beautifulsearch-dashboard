@@ -1,5 +1,3 @@
-import { dispatch } from "rxjs/internal/observable/pairs";
-
 export const SET_INSTANCE = "SET_INSTANCE";
 export const LIST_CORES = "LIST_CORES";
 export const SET_CORE = "SET_CORE";
@@ -13,7 +11,7 @@ export function setInstance(instance) {
 }
 
 export function listCores(cores) {
-  return (dispatch, getState) => {
+  return (dispatch) => {
     dispatch({
       type: LIST_CORES,
       cores

@@ -4,6 +4,7 @@ import cogoToast from "cogo-toast";
 import Solr from '../services/solr';
 
 export default function Schema({ instance, core }) {
+  const [schemaAttributesBackup, setSchemaAttributesBackup] = useState([]);
   const [schemaAttributes, setSchemaAttributes] = useState([]);
   const [fieldTypes, setFieldTypes] = useState([]);
   const [showingAddFieldModal, toggleAddFieldModal ] = useState(false);
@@ -13,7 +14,11 @@ export default function Schema({ instance, core }) {
   const fetchSchemaAttributes = async () => {
     const solr = new Solr(instance, core);
     const { data } = await solr.getSchema();
-    setSchemaAttributes(data.fields);
+    setSchemaAttributes(data.fields.map(d => ({...d})));
+    // store the value in the backup field
+    // to diff and make changes
+    // and reset back to the right value
+    setSchemaAttributesBackup(data.fields.map(d => ({...d})));
   }
 
   useEffect(() => {
@@ -47,10 +52,34 @@ export default function Schema({ instance, core }) {
     setSchemaAttributes([...schemeAttributesClone]);
   }
 
-  // const syncSchemaChagne = async () => {
-  //   // confirm
-  //   // network call to update the schema changes
-  // }
+  const syncSchemaChange = async () => {
+    if (window.confirm("Syncing the changes will break existing search. You will need to reindex the data for the app to work correctly. Do you agree?")) {
+      const solr = new Solr(instance, core);
+      let syncSuccess = false;
+      for (let i=0; i<schemaAttributes.length; i++) {
+        const orignal = schemaAttributesBackup[i];
+        const updated = schemaAttributes[i];
+
+        if ((orignal.name !== updated.name) || (orignal.type !== updated.type)) {
+          syncSuccess = true;
+          try {
+            await solr.deleteField(orignal.name);
+            await solr.addField({
+              name: updated.name,
+              type: updated.type
+            });
+          } catch (e) {
+            syncSuccess = false;
+            console.log(e);
+            cogoToast.error(`Failed when updating field ${orignal.name}, please contact support for more information`);
+            break;
+          }
+        }
+      }
+
+      syncSuccess && cogoToast.success("Schema update successful. Please reindex the data.")
+    }
+  }
 
   const createNewAttribute = async () => {
     const { name, type } = newField;
@@ -66,7 +95,7 @@ export default function Schema({ instance, core }) {
 
     const solr = new Solr(instance, core);
     try {
-      await solr.addFields(newField);
+      await solr.addField(newField);
       setNewField({name: '', type: ''});
       toggleAddFieldModal(false);
       fetchSchemaAttributes();
@@ -93,7 +122,10 @@ export default function Schema({ instance, core }) {
           >
             Create a Schema Field
           </button>
-          <button className="create-schema__button button--secondary">
+          <button
+            className="create-schema__button button--secondary"
+            onClick={syncSchemaChange}
+          >
             Update types
           </button>
         </div>

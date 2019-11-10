@@ -64,7 +64,7 @@ export default function Schema({ instance, core }) {
       return;
     }
 
-    const solr = new Solr();
+    const solr = new Solr(instance, core);
     try {
       await solr.addFields(newField);
       setNewField({name: '', type: ''});

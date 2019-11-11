@@ -5,6 +5,8 @@ import Navigation from './components/Navigation';
 import Home from './views/Home';
 import Schema from './views/Schema';
 import Documents from './views/Documents';
+import Synonyms from './views/Synonyms';
+import Relevance from './views/Relevance';
 
 // might want to move all the style file imports to styles.js file :)
 import './assets/css/normalizer.css';
@@ -35,6 +37,12 @@ function App() {
             </Route>
             <Route exact path="/documents">
               <Documents />
+            </Route>
+            <Route exact path="/synonyms">
+              <Synonyms instance={instance} core={core}/>
+            </Route>
+            <Route exact path="/relevance">
+              <Relevance instance={instance} core={core}/>
             </Route>
           </Switch>
         </div>

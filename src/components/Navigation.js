@@ -10,6 +10,7 @@ export default function Navigation() {
         <Link className="nav__link" to="/">Home</Link>
         <Link className="nav__link" to="/schema">Schema</Link>
         <Link className="nav__link" to="/documents">Documents</Link>
+        <Link className="nav__link" to="/synonyms">Synonyms</Link>
       </div>
     </nav>
   );

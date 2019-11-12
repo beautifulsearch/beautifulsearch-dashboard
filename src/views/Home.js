@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useSelector, useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 import cogoToast from "cogo-toast";
@@ -11,15 +11,17 @@ export default function Home({ instance, core }) {
   const history = useHistory();
   const cores = useSelector(state => state.global.cores) || [];
 
+  const [instanceUrl, setInstanceUrl] = useState(instance);
 
   const handleInstanceChange = (e) => {
     const instance = e.target.value || "";
-    dispatch(setInstance(instance.trim()));
+    setInstanceUrl(instance.trim());
   }
 
   const onConnect = async () => {
     // when a new connection attempt is made make sure to remove any pre selected core
     dispatch(setCore(null));
+    dispatch(setInstance(instanceUrl));
 
     try {
       const solr = new Solr(instance, core);
@@ -59,7 +61,7 @@ export default function Home({ instance, core }) {
           type="url"
           className="connection__url"
           placeholder="https://www.mysolr.com"
-          value={instance}
+          value={instanceUrl}
           onChange={handleInstanceChange}
         />
         <button

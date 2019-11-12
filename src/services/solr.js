@@ -31,6 +31,7 @@ export default class Solr {
   }
 
   query(query) {
+    // /beautifulsearch_template/select?q=*:*&fl=id
     const params = {
       query
     };
@@ -41,9 +42,12 @@ export default class Solr {
   getStatus() {
     // return this.instance.get('/api/cores');
     const params = {
-      core: this.core,
       action: "STATUS"
     };
+
+    if (this.core) {
+      params.core = this.core;
+    }
 
     return this.instance.get("/admin/cores", { params });
   }

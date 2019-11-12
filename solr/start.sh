@@ -4,6 +4,8 @@
 # extract the zip
 # and remove all the old containers
 if [[ $* == *--reload* ]]; then
+  # remove all conatiner
+  docker-compose down
   # this syntax will avoid error in case the file doesn't exist
   rm -f -- bs.zip
   rm -rf -- bs

@@ -4,10 +4,14 @@ export const SET_CORE = "SET_CORE";
 
 
 export function setInstance(instance) {
-  return {
-    type: SET_INSTANCE,
-    instance
-  };
+  return (dispatch) => {
+    window.localStorage.setItem("instance", instance);
+    dispatch({
+      type: SET_INSTANCE,
+      instance
+    });
+  }
+
 }
 
 export function listCores(cores) {
@@ -21,10 +25,7 @@ export function listCores(cores) {
 
 export function setCore(core) {
   return (dispatch, getState) => {
-    const instance = getState().global.instance;
-    instance && window.localStorage.setItem("instance", instance);
-    core && window.localStorage.setItem("core", core);
-
+    window.localStorage.setItem("core", core);
     dispatch({
       type: SET_CORE,
       core

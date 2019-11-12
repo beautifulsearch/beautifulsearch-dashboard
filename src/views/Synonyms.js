@@ -3,11 +3,12 @@ import Modal from 'react-modal';
 
 export default function Synonyms() {
   const [showingAddSynonymsModal, toggleAddSynonymModal] = useState(false);
-  let synonymSelectionType = true;  
+  let [ synonymSelectionType, toggleSynonymSelectionType ] = useState(true);
   let synonyms = []; //fill in synonyms
 
   const toggleSynonymType = (value) => {
     synonymSelectionType = value;
+    toggleSynonymSelectionType(value);
     let synonym = document.getElementById('synoyms');
     let synonymOneWay = document.getElementById('one-way-synoyms');
     if(synonymSelectionType === true) {
@@ -88,7 +89,7 @@ export default function Synonyms() {
         </div>
 
         <div>
-          { synonymSelectionType === false ?
+          { synonymSelectionType === true ?
           <div className="form__row">
             <label style={{ marginTop: 20}}>Synonyms</label>
             <input placeholder="List Of Synonyms"/>

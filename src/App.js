@@ -36,10 +36,10 @@ function App() {
               <Documents instance={instance} core={core}/>
             </Route>
             <Route exact path="/synonyms">
-              <Synonyms instance={instance} core={core}/>
+              <Synonyms/>
             </Route>
             <Route exact path="/relevance">
-              <Relevance instance={instance} core={core}/>
+              <Relevance/>
             </Route>
           </Switch>
         </div>

@@ -30,6 +30,14 @@ export default class Solr {
     });
   }
 
+  query(query) {
+    const params = {
+      query
+    };
+
+    return this.get("/techproducts/query", { params });
+  }
+
   getStatus() {
     // return this.instance.get('/api/cores');
     const params = {

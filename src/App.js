@@ -3,6 +3,7 @@ import { useSelector } from "react-redux";
 import { BrowserRouter as Router, Switch, Route, } from "react-router-dom";
 
 import Navigation from './components/Navigation';
+import Sidepanel from './components/Sidepanel';
 import Home from './views/Home';
 import Schema from './views/Schema';
 import Documents from './views/Documents';
@@ -23,6 +24,7 @@ function App() {
     <Router>
       <div>
         <Navigation />
+        <Sidepanel />
 
         <div className="matter">
           <Switch>

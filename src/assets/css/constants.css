@@ -155,6 +155,7 @@ http: //necolas.github.io/normalize.css/
    Borrowing the generour color variables from the tailwind css project
    https: //tailwindcss.com/docs/colors
   */
+  --overlay-color: rgba(35,37,51,.6);
   --black: #22292f;
   --grey-darkest: #3d4852;
   --grey-darker: #606f7b;

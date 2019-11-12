@@ -13,16 +13,16 @@ let schemaAttributesToReturn = [];
 
 schemaAttributes.forEach((val, index) => {
   schemaAttributesToReturn.push(
-    <tr className="document__attribute" key={index}> 
+    <tr className="document__attribute" key={index}>
       <td>{val}</td>
       <td style={{ color: "#b8c2cc"}}> => </td>
-      <td style={{ fontWeight: "400" }}> 
-        sample text here      
+      <td style={{ fontWeight: "400" }}>
+        sample text here
       </td>
     </tr>)
 });
 
-export default function Schema() {
+export default function Documents() {
   return (
     <div className="documents">
       <div className="documents__container">
@@ -39,7 +39,7 @@ export default function Schema() {
           <table className="documents-attribute__table">
             <tbody>
               { schemaAttributesToReturn }
-            </tbody>  
+            </tbody>
           </table>
         </div>
       </div>

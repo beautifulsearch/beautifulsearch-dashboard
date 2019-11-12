@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { } from 'react';
+import { useSelector } from "react-redux";
 import { BrowserRouter as Router, Switch, Route, } from "react-router-dom";
 
 import Navigation from './components/Navigation';
@@ -15,12 +16,8 @@ import './App.css';
 import './assets/css/components/navigation.css';
 
 function App() {
-  const [appState, setAppState] = useState({
-    instances: [],
-    instance: localStorage.getItem("instance") || "",
-    cores: [],
-    core: localStorage.getItem("core") || ""
-  });
+  const instance = useSelector(state => state.global.instance);
+  const core = useSelector(state => state.global.core);
 
   return (
     <Router>
@@ -30,13 +27,13 @@ function App() {
         <div className="matter">
           <Switch>
             <Route exact path="/">
-              <Home appState={appState} setAppState={setAppState}/>
+              <Home instance={instance} core={core}/>
             </Route>
             <Route exact path="/schema">
-              <Schema />
+              <Schema instance={instance} core={core}/>
             </Route>
             <Route exact path="/documents">
-              <Documents />
+              <Documents instance={instance} core={core}/>
             </Route>
             <Route exact path="/synonyms">
               <Synonyms instance={instance} core={core}/>

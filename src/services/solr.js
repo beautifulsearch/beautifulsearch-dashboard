@@ -1,37 +1,72 @@
 import axios from 'axios';
 
 export default class Solr {
-  constructor(core) {
-    this.core = core //|| localStorage.getItem('core');
-    let url = localStorage.getItem('instance');
-    if (!url) {
-      throw Error('Cannot create a solr instance without a valid url');
+  constructor(instance="", core) {
+    this.core = core;
+    let url = instance;
+
+    // validate url for http(s)
+    var pattern = /^((http|https):\/\/)/;
+    if (!pattern.test(url)) {
+      throw new Error("URL should start with http:// or https://");
     }
 
-    // remove trailing / as solr is very perticular about the url endpoints
-    // url = url.replace(/\/$/, "");
+    // create url object and extract the base url
+    const urlComponent = new URL(url);
+    url = urlComponent.origin;
+
+    // setup simple auth if required
+    if (urlComponent.username && urlComponent.password) {
+      this.auth = {
+        username: urlComponent.username,
+        password: urlComponent.password
+      };
+    }
 
     const baseURL = `${url}/solr`;
     this.instance = axios.create({
       baseURL,
+      auth: this.auth
     });
   }
 
-  getSchema(core=this.core) {
-    return this.instance.get(`/api/cores/${core}/schema`);
-  }
-
-  getFields(core=this.core) {
-    return this.instance.get(`/api/cores/${core}/schema/fields`);
-  }
-
-  getStatus(core=this.core) {
+  getStatus() {
     // return this.instance.get('/api/cores');
     const params = {
-      core,
+      core: this.core,
       action: "STATUS"
     };
 
     return this.instance.get("/admin/cores", { params });
+  }
+
+  getSchema() {
+    // return this.instance.get(`/api/cores/${core}/schema`);
+    return this.instance.get(`/${this.core}/schema/fields`);
+  }
+
+  getFields() {
+    return this.instance.get(`/${this.core}/schema/fieldtypes`);
+  }
+
+  addField(defination) {
+    const params = {
+      "add-field": {
+        ...defination,
+        stored: true
+      }
+    }
+
+    return this.instance.post(`/${this.core}/schema`, params);
+  }
+
+  deleteField(name) {
+    const params = {
+      "delete-field": {
+        name
+      }
+    };
+
+    return this.instance.post(`/${this.core}/schema`, params);
   }
 }

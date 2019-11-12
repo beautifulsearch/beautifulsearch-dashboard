@@ -11,26 +11,22 @@ export default function Home({ instance, core }) {
   const history = useHistory();
   const cores = useSelector(state => state.global.cores) || [];
 
-  const [instanceUrl, setInstanceUrl] = useState(instance);
-
   const handleInstanceChange = (e) => {
     const instance = e.target.value || "";
-    setInstanceUrl(instance.trim());
+    dispatch(setInstance(instance.trim()));
   }
 
   const onConnect = async () => {
     // when a new connection attempt is made make sure to remove any pre selected core
     dispatch(setCore(null));
-    dispatch(setInstance(instanceUrl));
 
     try {
-      const solr = new Solr(instance, core);
+      const solr = new Solr(instance, null);
       if (!solr) return;
       const { data } = await solr.getStatus();
       const cores = Object.keys(data.status);
       cogoToast.success("Connection to Solr successful");
       dispatch(listCores(cores));
-      dispatch(setCore(""));
     } catch(e) {
       console.log(e);
       cogoToast.error(e.message || "Failed to connect to the Solr instance");
@@ -61,7 +57,7 @@ export default function Home({ instance, core }) {
           type="url"
           className="connection__url"
           placeholder="https://www.mysolr.com"
-          value={instanceUrl}
+          value={instance}
           onChange={handleInstanceChange}
         />
         <button

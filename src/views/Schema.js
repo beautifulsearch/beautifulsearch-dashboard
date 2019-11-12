@@ -52,6 +52,21 @@ export default function Schema({ instance, core }) {
     setSchemaAttributes([...schemeAttributesClone]);
   }
 
+  const deleteSchemaAttribute = async (name) => {
+    const solr = new Solr(instance, core);
+    try {
+      await solr.deleteField(name);
+      cogoToast.success("Field deleted successfully");
+    }
+    catch(e) {
+      console.log(e);
+      cogoToast.error(`Failed to delete field`);
+    } finally {
+      fetchFieldTypes();
+      fetchSchemaAttributes();
+    }
+  }
+
   const syncSchemaChange = async () => {
     if (window.confirm("Syncing the changes will break existing search. You will need to reindex the data for the app to work correctly. Do you agree?")) {
       const solr = new Solr(instance, core);
@@ -135,19 +150,24 @@ export default function Schema({ instance, core }) {
           <tbody>
             {filteredSchemaAttributes().map((a, index) => (
               <tr className="schema__attribute" key={a.name}>
-                <td>{a.name}</td>
+                <td className="schema-attribute__name">{a.name}</td>
                 <td>
-                  <select
-                    className="attribute__value"
-                    value={a.type}
-                    onChange={e => onFieldTypeChange(a.name, e.target.value)}
-                  >
-                    {filteredFieldTypes().map(ft => (
-                      <option value={ft.name} key={ft.name}>
-                        {ft.name}
-                      </option>
-                    ))}
-                  </select>
+                  <div style={{ display: "flex"}}>
+                    <select
+                      className="attribute__value"
+                      value={a.type}
+                      onChange={e => onFieldTypeChange(a.name, e.target.value)}
+                    >
+                      {filteredFieldTypes().map(ft => (
+                        <option value={ft.name} key={ft.name}>
+                          {ft.name}
+                        </option>
+                      ))}
+                    </select>
+                    <button className="delete__button"  onClick={() => {if(window.confirm(`Delete the item ${a.name} ?`)){deleteSchemaAttribute(a.name)};}}>
+                      <i className="fas fa-trash-alt"></i>
+                    </button>
+                  </div>  
                 </td>
               </tr>
             ))}

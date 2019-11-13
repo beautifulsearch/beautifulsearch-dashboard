@@ -30,13 +30,13 @@ export default class Solr {
     });
   }
 
-  query(query) {
-    // /beautifulsearch_template/select?q=*:*&fl=id
+  query(q) {
     const params = {
-      query
+      q: '*:*',
+      fl: "id"
     };
 
-    return this.get("/techproducts/query", { params });
+    return this.instance.get(`/${this.core}/select`, { params });
   }
 
   getStatus() {
@@ -70,6 +70,15 @@ export default class Solr {
     }
 
     return this.instance.post(`/${this.core}/schema`, params);
+  }
+
+  uploadJson(file) {
+    const params = {
+      'saveAs': file.name,
+      'action': 'import-json',
+      'idField': 'sku'
+    }
+    // return this.instance.post(`/${this.core}/beautifulsearch`, { ...file, params });
   }
 
   deleteField(name) {

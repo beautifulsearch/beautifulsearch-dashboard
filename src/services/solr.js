@@ -72,6 +72,15 @@ export default class Solr {
     return this.instance.post(`/${this.core}/schema`, params);
   }
 
+  uploadJson(file) {
+    const params = {
+      'saveAs': file.name,
+      'action': 'import-json',
+      'idField': 'sku'
+    }
+    // return this.instance.post(`/${this.core}/beautifulsearch`, { ...file, params });
+  }
+
   deleteField(name) {
     const params = {
       "delete-field": {

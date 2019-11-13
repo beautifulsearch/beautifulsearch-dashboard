@@ -8,7 +8,7 @@ export default function Documents({ instance, core }) {
   const [ optionToUpload, toggleOptionToUpload ] = useState(true);
   const [ jsonUpload, toggleJsonUpload ] = useState(true);
   const [ showingJsonModal, toggleJsonModal ] = useState(false);
-  let [ fileUpload, setFileUpload ] = useState();
+  let [ file, setFile ] = useState();
   const schemaAttributes = ["id",
     "description",
     "nps_link",
@@ -46,18 +46,23 @@ export default function Documents({ instance, core }) {
     toggleJsonModal(false);
     toggleOptionToUpload(true);
     toggleJsonUpload(true);
-    setFileUpload();
+    setFile(null);
   }
 
   const onFileChange = (event) => {
-    let fileData =  event.target.files[0];
-    fileUpload = fileData;
-    setFileUpload(fileUpload);
+    let file =  event.target.files[0];
+    setFile(file);
   }
 
   const uploadJsonFile = async () => {
     const solr = new Solr(instance, core);
-    await solr.uploadJson(fileUpload);
+    const fileName = file.name;
+    var reader = new FileReader();
+    reader.onload = async (e) => {
+      var fileContent = e.target.result;
+      await solr.uploadJson(fileName, JSON.parse(fileContent));
+    };
+    reader.readAsText(file);
   }
 
   return (
@@ -109,7 +114,7 @@ export default function Documents({ instance, core }) {
                 </div>
               </div>
               <div className="upload__text">
-                <div>The Documents API can be used to add new documents to your Engine, update documents, retrieve documents by id, and delete documents. There are a variety of client libraries to help you get started.</div>  
+                <div>The Documents API can be used to add new documents to your Engine, update documents, retrieve documents by id, and delete documents. There are a variety of client libraries to help you get started.</div>
               </div>
               <div className="upload__action">
                 <button onClick={onClosingModal} className="button--secondary">
@@ -129,15 +134,15 @@ export default function Documents({ instance, core }) {
                       Continue
                     </button>
                   </div>
-                </div> : 
+                </div> :
                 <div>
                   <input type="file" id="file" className="uploader__input" onChange={onFileChange} accept="application/json"/>
                   <label htmlFor="file" className="uploader__label">
                     <i className="fas fa-upload upload-icon"></i>
                     <div>
-                      { !fileUpload ? 
+                      { !file ?
                         <div>Upload a .json</div> :
-                        <div>{ fileUpload && fileUpload.name }</div>  
+                        <div>{ file && file.name }</div>
                       }
                     </div>
                   </label>
@@ -148,7 +153,7 @@ export default function Documents({ instance, core }) {
                     <button onClick={uploadJsonFile} className="button--primary continue__button">
                       Continue
                     </button>
-                  </div>  
+                  </div>
                 </div>
               }
             </div>

@@ -72,13 +72,13 @@ export default class Solr {
     return this.instance.post(`/${this.core}/schema`, params);
   }
 
-  uploadJson(file) {
+  uploadJson(fileName, fileContent) {
     const params = {
-      'saveAs': file.name,
       'action': 'import-json',
-      'idField': 'sku'
+      'saveAs': fileName,
     }
-    // return this.instance.post(`/${this.core}/beautifulsearch`, { ...file, params });
+
+    return this.instance.post(`/${this.core}/beautifulsearch`, fileContent, { params });
   }
 
   deleteField(name) {

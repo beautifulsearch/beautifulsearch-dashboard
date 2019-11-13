@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 import cogoToast from "cogo-toast";
 
-import Solr from "../services/solr";
+import Solr from "solr-admin-client";
 import { setInstance, listCores, setCore } from "../store/global";
 
 export default function Home({ instance, core }) {

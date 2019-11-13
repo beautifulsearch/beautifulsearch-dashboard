@@ -9004,6 +9004,12 @@ sockjs@0.3.19:
     faye-websocket "^0.10.0"
     uuid "^3.0.1"
 
+"solr-admin-client@https://github.com/beautifulsearch/solr-admin-client":
+  version "1.0.1"
+  resolved "https://github.com/beautifulsearch/solr-admin-client#f6fcf1961b3dafcc165e0075c5e9c87f12a6d920"
+  dependencies:
+    axios "^0.19.0"
+
 sort-keys@^1.0.0:
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/sort-keys/-/sort-keys-1.1.2.tgz#441b6d4d346798f1b4e49e8920adfba0e543f9ad"

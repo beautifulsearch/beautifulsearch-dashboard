@@ -4,10 +4,14 @@ export const SET_CORE = "SET_CORE";
 
 
 export function setInstance(instance) {
-  return {
-    type: SET_INSTANCE,
-    instance
-  };
+  return (dispatch) => {
+    window.localStorage.setItem("instance", JSON.stringify(instance));
+    dispatch({
+      type: SET_INSTANCE,
+      instance
+    });
+  }
+
 }
 
 export function listCores(cores) {
@@ -20,11 +24,8 @@ export function listCores(cores) {
 }
 
 export function setCore(core) {
-  return (dispatch, getState) => {
-    const instance = getState().global.instance;
-    instance && window.localStorage.setItem("instance", instance);
-    core && window.localStorage.setItem("core", core);
-
+  return (dispatch) => {
+    window.localStorage.setItem("core", JSON.stringify(core));
     dispatch({
       type: SET_CORE,
       core
@@ -34,9 +35,9 @@ export function setCore(core) {
 
 
 const defaultState = {
-  instance: localStorage.getItem("instance") || "",
+  instance: JSON.parse(window.localStorage.getItem("instance")),
   cores: [],
-  core: localStorage.getItem("core")
+  core: JSON.parse(window.localStorage.getItem("core"))
 };
 
 

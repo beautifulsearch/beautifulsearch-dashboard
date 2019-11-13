@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useSelector, useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 import cogoToast from "cogo-toast";
@@ -11,7 +11,6 @@ export default function Home({ instance, core }) {
   const history = useHistory();
   const cores = useSelector(state => state.global.cores) || [];
 
-
   const handleInstanceChange = (e) => {
     const instance = e.target.value || "";
     dispatch(setInstance(instance.trim()));
@@ -22,13 +21,12 @@ export default function Home({ instance, core }) {
     dispatch(setCore(null));
 
     try {
-      const solr = new Solr(instance, core);
+      const solr = new Solr(instance, null);
       if (!solr) return;
       const { data } = await solr.getStatus();
       const cores = Object.keys(data.status);
       cogoToast.success("Connection to Solr successful");
       dispatch(listCores(cores));
-      dispatch(setCore(""));
     } catch(e) {
       console.log(e);
       cogoToast.error(e.message || "Failed to connect to the Solr instance");

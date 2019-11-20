@@ -1,13 +1,19 @@
 import React, { useEffect, useState } from "react";
-import Solr from '../services/solr';
 import JsonEditor from '../components/JsonEditor';
 import Modal from 'react-modal';
+import cogoToast from "cogo-toast";
+import Solr from '../services/solr';
+
 
 export default function Documents({ instance, core }) {
   // const [fieldTypes, setDocuments] = useState([]);
   const [ optionToUpload, toggleOptionToUpload ] = useState(true);
   const [ jsonUpload, toggleJsonUpload ] = useState(true);
   const [ showingJsonModal, toggleJsonModal ] = useState(false);
+  const [ schemaFields, setSchemaFields ] = useState([]);
+  const [ working, setWorking ] = useState(false);
+  const [ idField, setIdField ] = useState('');
+
   let [ file, setFile ] = useState();
   const schemaAttributes = ["id",
     "description",
@@ -52,15 +58,45 @@ export default function Documents({ instance, core }) {
   const onFileChange = (event) => {
     let file =  event.target.files[0];
     setFile(file);
+    getFileSchema(file);
   }
 
-  const uploadJsonFile = async () => {
+  const getFileSchema = async (file) => {
+    setWorking(true);
     const solr = new Solr(instance, core);
     const fileName = file.name;
     var reader = new FileReader();
     reader.onload = async (e) => {
       var fileContent = e.target.result;
-      await solr.uploadJson(fileName, JSON.parse(fileContent));
+      try {
+        await solr.uploadJson(fileName, JSON.parse(fileContent))
+      } catch(e) {
+        const schemaFields = Object.keys(e.response.data.schema);
+        setSchemaFields(schemaFields);
+        setWorking(false);
+      }
+    };
+    reader.readAsText(file);
+  }
+
+  const upload = async (fileName, fileContent) => {
+    const solr = new Solr(instance, core);
+    try {
+      await solr.completeImport(fileName, idField);
+      toggleJsonModal(false);
+      cogoToast.success('File upload successfull');
+      // fetch the documents too
+    } catch(e) {
+      console.log(e);
+    }
+  }
+
+  const uploadJsonFile = async () => {
+    const fileName = file.name;
+    var reader = new FileReader();
+    reader.onload = async (e) => {
+      var fileContent = e.target.result;
+      upload(fileName, JSON.parse(fileContent))
     };
     reader.readAsText(file);
   }
@@ -146,11 +182,27 @@ export default function Documents({ instance, core }) {
                       }
                     </div>
                   </label>
+
+                  {
+                    schemaFields.length > 0 &&
+                    <div>
+                      <label>
+                        Select ID field
+                        <select value={idField} onChange={(e) => setIdField(e.target.value)}>
+                          {
+                            schemaFields.map(f =>
+                            <option value={f} key={f}>{f}</option>
+                            )
+                          }
+                        </select>
+                      </label>
+                    </div>
+                  }
                   <div className="synonym-modal__button">
                     <button onClick={onClosingModal} className="button--secondary">
                       Cancel
                     </button>
-                    <button onClick={uploadJsonFile} className="button--primary continue__button">
+                    <button onClick={uploadJsonFile} className="button--primary continue__button" disabled={working || !idField}>
                       Continue
                     </button>
                   </div>

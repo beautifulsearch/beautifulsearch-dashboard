@@ -33,7 +33,6 @@ export default class Solr {
   query(q) {
     const params = {
       q: '*:*',
-      fl: "id"
     };
 
     return this.instance.get(`/${this.core}/select`, { params });

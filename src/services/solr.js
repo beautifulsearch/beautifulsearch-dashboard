@@ -39,6 +39,17 @@ export default class Solr {
     return this.instance.get(`/${this.core}/select`, { params });
   }
 
+  createCore(name, instance_dir = "", config_set = "_default") {
+    const params = {
+      "action": "CREATE",
+      "name": name,
+      "instance_dir": instance_dir,
+      "configSet": config_set
+    };
+
+    return this.instance.get("/admin/cores", { params });
+  }
+
   getStatus() {
     // return this.instance.get('/api/cores');
     const params = {

@@ -25,27 +25,27 @@ function App() {
   const instance = useSelector(state => state.global.instance);
   const core = useSelector(state => state.global.core);
   const connected = useSelector(state => state.global.connected);
-  const [statusPoll, setStautsPoll] = useState(null);
+  // const [statusPoll, setStautsPoll] = useState(null);
 
-  const checkConnection = async () => {
-    const solr = new Solr(instance);
-    try {
-      await solr.getStatus();
-      dispatch(connect());
-    } catch (e) {
-      dispatch(disconnect());
-    }
-  }
+  // const checkConnection = async () => {
+  //   const solr = new Solr(instance);
+  //   try {
+  //     await solr.getStatus();
+  //     dispatch(connect());
+  //   } catch (e) {
+  //     dispatch(disconnect());
+  //   }
+  // }
 
-  useEffect(() => {
-    checkConnection();
-    const tracker = window.setInterval(checkConnection, (15*1000));
-    setStautsPoll(tracker);
+  // useEffect(() => {
+  //   checkConnection();
+  //   const tracker = window.setInterval(checkConnection, (15*1000));
+  //   setStautsPoll(tracker);
 
-    return () => {
-      window.clearInterval(statusPoll);
-    }
-  }, [])
+  //   return () => {
+  //     window.clearInterval(statusPoll);
+  //   }
+  // }, [])
 
   return (
     <Router>

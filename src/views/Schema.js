@@ -2,13 +2,14 @@ import React, {useEffect, useState} from "react";
 import Modal from 'react-modal';
 import cogoToast from "cogo-toast";
 import Solr from '../services/solr';
+import ClipLoader from 'react-spinners/ClipLoader';
 
 export default function Schema({ instance, core }) {
-  const [schemaAttributesBackup, setSchemaAttributesBackup] = useState([]);
-  const [schemaAttributes, setSchemaAttributes] = useState([]);
-  const [fieldTypes, setFieldTypes] = useState([]);
-  const [showingAddFieldModal, toggleAddFieldModal ] = useState(false);
-  const [newField, setNewField] = useState({name: '', type: ''});
+  const [ schemaAttributesBackup, setSchemaAttributesBackup] = useState([]);
+  const [ schemaAttributes, setSchemaAttributes] = useState([]);
+  const [ fieldTypes, setFieldTypes] = useState([]);
+  const [ showingAddFieldModal, toggleAddFieldModal ] = useState(false);
+  const [ newField, setNewField] = useState({name: '', type: ''});
 
   // schema
   const fetchSchemaAttributes = async () => {
@@ -146,33 +147,43 @@ export default function Schema({ instance, core }) {
         </div>
       </div>
       <div className="schema-attribute__container">
-        <table className="schema-container__table">
-          <tbody>
-            {filteredSchemaAttributes().map((a, index) => (
-              <tr className="schema__attribute" key={a.name}>
-                <td className="schema-attribute__name">{a.name}</td>
-                <td>
-                  <div style={{ display: "flex"}}>
-                    <select
-                      className="attribute__value"
-                      value={a.type}
-                      onChange={e => onFieldTypeChange(a.name, e.target.value)}
-                    >
-                      {filteredFieldTypes().map(ft => (
-                        <option value={ft.name} key={ft.name}>
-                          {ft.name}
-                        </option>
-                      ))}
-                    </select>
-                    <button className="delete__button"  onClick={() => {if(window.confirm(`Delete the item ${a.name} ?`)){deleteSchemaAttribute(a.name)};}}>
-                      <i className="fas fa-trash-alt"></i>
-                    </button>
-                  </div>  
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        {
+          schemaAttributes.length > 0 && fieldTypes.length > 0 ?
+          <table className="schema-container__table">
+            <tbody>
+              {filteredSchemaAttributes().map((a, index) => (
+                <tr className="schema__attribute" key={a.name}>
+                  <td className="schema-attribute__name schema-table__data">{a.name}</td>
+                  <td className="schema-table__data">
+                    <div style={{ display: "flex"}}>
+                      <select
+                        className="attribute__value"
+                        value={a.type}
+                        onChange={e => onFieldTypeChange(a.name, e.target.value)}
+                      >
+                        {filteredFieldTypes().map(ft => (
+                          <option value={ft.name} key={ft.name}>
+                            {ft.name}
+                          </option>
+                        ))}
+                      </select>
+                      <button className="delete__button"  onClick={() => {if(window.confirm(`Delete the item ${a.name} ?`)){deleteSchemaAttribute(a.name)};}}>
+                        <i className="fas fa-trash-alt"></i>
+                      </button>
+                    </div>  
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table> :
+          <div className="schema-container__loader">
+            <ClipLoader
+            sizeUnit={"px"}
+            size={50}
+            color={'#123abc'}
+            loading={true}/> 
+          </div>
+        }
       </div>
 
       <Modal

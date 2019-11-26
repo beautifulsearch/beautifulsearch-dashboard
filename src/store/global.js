@@ -1,6 +1,8 @@
 export const SET_INSTANCE = "SET_INSTANCE";
 export const LIST_CORES = "LIST_CORES";
 export const SET_CORE = "SET_CORE";
+export const CONNECT = "CONNECT";
+export const DISCONNECT = "DISCONNECT";
 
 
 export function setInstance(instance) {
@@ -11,8 +13,20 @@ export function setInstance(instance) {
       instance
     });
   }
-
 }
+
+export function connect() {
+  return({
+    type: CONNECT
+  });
+}
+
+export function disconnect() {
+  return({
+    type: DISCONNECT
+  });
+}
+
 
 export function listCores(cores) {
   return (dispatch) => {
@@ -35,6 +49,7 @@ export function setCore(core) {
 
 
 const defaultState = {
+  connected: false,
   instance: JSON.parse(window.localStorage.getItem("instance")),
   cores: [],
   core: JSON.parse(window.localStorage.getItem("core"))
@@ -49,6 +64,10 @@ export default function globalReducer(state = defaultState, action = {}) {
       return { ...state, cores: action.cores };
     case SET_CORE:
       return { ...state, core: action.core };
+    case CONNECT:
+      return { ...state, connected: true };
+    case DISCONNECT:
+      return { ...state, connected: false };
     default:
       return state;
   }

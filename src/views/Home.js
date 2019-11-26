@@ -3,13 +3,15 @@ import { useSelector, useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 import cogoToast from "cogo-toast";
 
+// import Solr from "solr-admin-client";
 import Solr from "../services/solr";
-import { setInstance, listCores, setCore } from "../store/global";
+import { setInstance, connect, listCores, setCore } from "../store/global";
 
 export default function Home({ instance, core }) {
   const dispatch = useDispatch();
   const history = useHistory();
   const cores = useSelector(state => state.global.cores) || [];
+  const [newCoreName, setNewCoreName] = useState("");
 
   const handleInstanceChange = (e) => {
     const instance = e.target.value || "";
@@ -26,6 +28,7 @@ export default function Home({ instance, core }) {
       const { data } = await solr.getStatus();
       const cores = Object.keys(data.status);
       cogoToast.success("Connection to Solr successful");
+      dispatch(connect());
       dispatch(listCores(cores));
     } catch(e) {
       console.log(e);
@@ -37,6 +40,13 @@ export default function Home({ instance, core }) {
     const core = e.target.value || "";
     dispatch(setCore(core.trim()));
     history.push('/schema');
+  }
+
+  const createCore = async () => {
+    const solr = new Solr(instance);
+    const { data } = await solr.createCore(newCoreName);
+    console.log(data);
+    onConnect();
   }
 
 
@@ -88,6 +98,13 @@ export default function Home({ instance, core }) {
               </label>
             </div>
           ))}
+
+          {
+            <div className="core__item">
+              <input type="text" value={newCoreName} onChange={e => setNewCoreName(e.target.value)}/>
+              <button className="button--secondary" onClick={createCore}>Create Core</button>
+            </div>
+          }
         </div>
       </div>
     </div>

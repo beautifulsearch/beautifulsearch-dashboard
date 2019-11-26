@@ -33,10 +33,20 @@ export default class Solr {
   query(q) {
     const params = {
       q: '*:*',
-      fl: "id"
     };
 
     return this.instance.get(`/${this.core}/select`, { params });
+  }
+
+  createCore(name, instance_dir = "", config_set = "_default") {
+    const params = {
+      "action": "CREATE",
+      "name": name,
+      "instance_dir": instance_dir,
+      "configSet": config_set
+    };
+
+    return this.instance.get("/admin/cores", { params });
   }
 
   getStatus() {
@@ -72,13 +82,25 @@ export default class Solr {
     return this.instance.post(`/${this.core}/schema`, params);
   }
 
-  uploadJson(file) {
+  uploadJson(fileName, fileContent) {
     const params = {
-      'saveAs': file.name,
       'action': 'import-json',
-      'idField': 'sku'
+      'saveAs': fileName,
     }
-    // return this.instance.post(`/${this.core}/beautifulsearch`, { ...file, params });
+
+    return this.instance.post(`/${this.core}/beautifulsearch`, fileContent, { params });
+  }
+
+  completeImport(fileName, idField) {
+    const params = {
+      action: "import-json",
+      file: fileName,
+      idField
+    };
+
+    return this.instance.post(`/${this.core}/beautifulsearch`, null, {
+      params
+    });
   }
 
   deleteField(name) {

@@ -1,18 +1,20 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
+// import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from "react-redux";
 import { BrowserRouter as Router, Switch, Route, } from "react-router-dom";
 
-import Solr from "./services/solr";
+// import Solr from "./services/solr";
 
 import Navigation from './components/Navigation';
 import Sidepanel from './components/Sidepanel';
+import ProgressTab from './components/ProgressTab';
 import Home from './views/Home';
 import Schema from './views/Schema';
 import Documents from './views/Documents';
 import Synonyms from './views/Synonyms';
 import Relevance from './views/Relevance';
 
-import { connect, disconnect } from "./store/global";
+// import { connect, disconnect } from "./store/global";
 
 // might want to move all the style file imports to styles.js file :)
 import './assets/css/normalizer.css';
@@ -21,10 +23,11 @@ import './App.css';
 import './assets/css/components/navigation.css';
 
 function App() {
-  const dispatch = useDispatch();
+  useDispatch();
   const instance = useSelector(state => state.global.instance);
   const core = useSelector(state => state.global.core);
   const connected = useSelector(state => state.global.connected);
+  let slidePanelStatus = useSelector(state => state.global.slidePanelStatus);
   // const [statusPoll, setStautsPoll] = useState(null);
 
   // const checkConnection = async () => {
@@ -51,7 +54,10 @@ function App() {
     <Router>
       <div>
         <Navigation />
-        <Sidepanel />
+        <ProgressTab />
+        {
+          slidePanelStatus && <Sidepanel /> 
+        }
 
         {!connected && <div>Check your connection</div>}
         <div className="matter">
@@ -66,7 +72,7 @@ function App() {
               <Documents instance={instance} core={core}/>
             </Route>
             <Route exact path="/synonyms">
-              <Synonyms/>
+              <Synonyms instance={instance} core={core}/>
             </Route>
             <Route exact path="/relevance">
               <Relevance/>

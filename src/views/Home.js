@@ -5,13 +5,14 @@ import cogoToast from "cogo-toast";
 
 // import Solr from "solr-admin-client";
 import Solr from "../services/solr";
-import { setInstance, connect, listCores, setCore } from "../store/global";
+import { setInstance, connect, listCores, setCore, setCreateStoreStatus } from "../store/global";
 
 export default function Home({ instance, core }) {
   const dispatch = useDispatch();
   const history = useHistory();
   const cores = useSelector(state => state.global.cores) || [];
   const [newCoreName, setNewCoreName] = useState("");
+  useSelector(state => state.global.createCoreStatus);
 
   const handleInstanceChange = (e) => {
     const instance = e.target.value || "";
@@ -46,6 +47,7 @@ export default function Home({ instance, core }) {
     const solr = new Solr(instance);
     const { data } = await solr.createCore(newCoreName);
     console.log(data);
+    dispatch(setCreateStoreStatus());
     onConnect();
   }
 

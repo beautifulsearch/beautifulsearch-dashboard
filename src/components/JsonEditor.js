@@ -1,40 +1,11 @@
 import React, { Component } from 'react';
-
 import JSONEditorReact from './JSONEditorReact';
-
-const schema = {
-  title: 'Example Schema',
-  type: 'object',
-  properties: {
-    array: {
-      type: 'array',
-      items: {
-        type: 'number'
-      }
-    },
-    boolean: {
-      type: 'boolean'
-    },
-    number: {
-      type: 'number'
-    }
-  }
-};
-
-const json = { 
-  "employee": {  
-    "name":"sonoo",   
-    "salary":56000,   
-    "married":true  
-  }
-};
 
 const modes = ['text'];
 
 class App extends Component {
   state = {
-    schema,
-    text: JSON.stringify(json, null, 2),
+    text: null,
     mode: 'text'
   };
 
@@ -43,13 +14,13 @@ class App extends Component {
       <div className="app">
         <div className="contents">
           <JSONEditorReact
-              schema={this.state.schema}
               text={this.state.text}
               mode={modes}
               modes={modes}
               indentation={4}
               onChangeText={this.onChangeText}
               onModeChange={this.onModeChange}
+              onChange={this.props.updateParent(this.state.text)}
           />
         </div>
       </div>

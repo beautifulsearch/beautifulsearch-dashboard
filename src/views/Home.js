@@ -11,6 +11,8 @@ export default function Home({ instance, core }) {
   const dispatch = useDispatch();
   const history = useHistory();
   const cores = useSelector(state => state.global.cores) || [];
+  const onboarding = useSelector(state => state.global.onboarding);
+
   const [newCoreName, setNewCoreName] = useState("");
 
   const handleInstanceChange = (e) => {
@@ -48,7 +50,7 @@ export default function Home({ instance, core }) {
       const { data } = await solr.createCore(newCoreName);
       cogoToast.success(data.msg);
       dispatch(setOnboardingDetails({ coreCreated: true }));
-      await solr.setSidePanelValues(true, false);
+      await solr.setConfiguration({ ...onboarding, coreCreated: true });
       cogoToast.success("Task Completed Succefully");
     } catch(e) {
       console.log(e)

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import classNames from 'classnames';
 import { useSelector, useDispatch } from "react-redux";
 import { toggleSlidePanel } from "../store/global";
 import { useHistory } from "react-router-dom";
@@ -15,6 +16,14 @@ export default function Sidepanel() {
 
 
   // TODO: remove this and use react classes for dynamic classnames
+  const coreCreatedStatus = () => {
+    const created = onboarding.coreCreated;
+    return classNames({
+      "slide-panel__checkbox--active": created,
+
+    })
+  }
+
   const checkingTaskStatus = () => {
     if(slidePanelStatus === true ) {
       if(onboarding.coreCreated === true ) {
@@ -24,14 +33,6 @@ export default function Sidepanel() {
         createCoreText.classList.add('slide-panel__text--active');
         let panelCore = document.getElementById('panel-core');
         panelCore.classList.add('slide-panel__content--active');
-        if(onboarding.documentImported === true) {
-          let createCore = document.getElementById('panel-add-record');
-          createCore.classList.add('slide-panel__checkbox--active');
-          let createCoreText = document.getElementById('panel-add-text');
-          createCoreText.classList.add('slide-panel__text--active');
-          let panelCore = document.getElementById('panel-record');
-          panelCore.classList.add('slide-panel__content--active');
-        }
       }
     }
   }
@@ -48,13 +49,16 @@ export default function Sidepanel() {
           <h2 style={{marginLeft: "20"}}>Sample task List</h2>
           <span className="close" onClick={closeSlider}>×</span>
         </div>
+
         <div className="slide-panel__content">
           <div className="progress-bar__container">
             <div className="progress-bar__text">{`${1}/2 tasks completed`}</div>
             <progress className="panel-progress__bar" value={1} max="100"></progress>
           </div>
         </div>
-        <div className="slide-panel__content">
+
+
+        <div className={classNames({"slide-panel__content": true, "slide-panel__content--checked": onboarding.coreCreated})}>
           <div className="panel-checkbox__container">
             <div id="panel-create-core">
               {
@@ -69,7 +73,8 @@ export default function Sidepanel() {
             <div className="slide-panel__body">A core stores the data that you want to make searchable in name.</div>
           </div>
         </div>
-        <div className="slide-panel__content">
+
+        <div className={classNames({"slide-panel__content": true, "slide-panel__content--checked": onboarding.documentImported})}>
           <div className="panel-checkbox__container">
             <div id="panel-add-record">
               {

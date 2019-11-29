@@ -931,7 +931,7 @@ button:disabled {
   border: 1px solid var(--grey);
 }
 
-.slide-panel__checkbox--active {
+.slide-panel__content--checked .slide-panel__checkbox {
   height: 100%;
   display: flex;
   justify-content: center;
@@ -940,11 +940,11 @@ button:disabled {
   margin-top: var(--spacing-4);
 }
 
-.slide-panel__text--active {
+.slide-panel__content--checked .slide-panel__text {
   text-decoration: line-through;
 }
 
-.slide-panel__content--active {
+.slide-panel__content--checked .slide-panel__content {
   opacity: 0.5;
 }
 

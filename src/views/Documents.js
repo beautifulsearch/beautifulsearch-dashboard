@@ -1,17 +1,18 @@
 import React, { useEffect, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import JsonEditor from '../components/JsonEditor';
 import Modal from 'react-modal';
 import cogoToast from "cogo-toast";
 import Solr from '../services/solr';
 import ClipLoader from 'react-spinners/ClipLoader';
 import ReactJson from 'react-json-view';
-import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { setOnboardingDetails } from "../store/global";
 
 export default function Documents({ instance, core }) {
   const dispatch = useDispatch();
   const history = useHistory();
+  const onboarding = useSelector(state => state.global.onboarding);
   const [ documents, setDocuments ] = useState([]);
   const [ optionToUpload, toggleOptionToUpload ] = useState(true);
   const [ jsonUpload, toggleJsonUpload ] = useState(true);
@@ -75,7 +76,7 @@ export default function Documents({ instance, core }) {
       cogoToast.success('File upload successfull');
       dispatch(setOnboardingDetails({ documentImported: true }));
       cogoToast.success("Task Completed Succefully");
-      await solr.setSidePanelValues(true, true);
+      await solr.setConfiguration({ ...onboarding, documentImported: true });
       fetchDocuments();
     } catch(e) {
       console.log(e);

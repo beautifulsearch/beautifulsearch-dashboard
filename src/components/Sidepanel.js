@@ -7,34 +7,10 @@ import { useHistory } from "react-router-dom";
 export default function Sidepanel() {
   const dispatch = useDispatch();
   const history = useHistory();
-  let slidePanelStatus = useSelector(state => state.global.slidePanelStatus);
   let onboarding = useSelector(state => state.global.onboarding);
 
   const closeSlider = () => {
     dispatch(toggleSlidePanel());
-  }
-
-
-  // TODO: remove this and use react classes for dynamic classnames
-  const coreCreatedStatus = () => {
-    const created = onboarding.coreCreated;
-    return classNames({
-      "slide-panel__checkbox--active": created,
-
-    })
-  }
-
-  const checkingTaskStatus = () => {
-    if(slidePanelStatus === true ) {
-      if(onboarding.coreCreated === true ) {
-        let createCore = document.getElementById('panel-create-core');
-        createCore.classList.add('slide-panel__checkbox--active');
-        let createCoreText = document.getElementById('panel-create-text');
-        createCoreText.classList.add('slide-panel__text--active');
-        let panelCore = document.getElementById('panel-core');
-        panelCore.classList.add('slide-panel__content--active');
-      }
-    }
   }
 
   const uploadRecord = () => {

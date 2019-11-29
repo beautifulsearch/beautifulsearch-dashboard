@@ -127,7 +127,7 @@ export default class Solr {
     return this.instance.get(`/${this.core}/schema/analysis/beautifulsearch/synonyms/english`);
   }
 
-  deleteSynonym(index) {
+  deleteSynonymEntry(index) {
     return this.instance.delete(`/${this.core}/schema/analysis/beautifulsearch/synonyms/english/${index}`);
   }
 }

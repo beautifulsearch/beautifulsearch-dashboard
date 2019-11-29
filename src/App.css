@@ -615,7 +615,7 @@ button:disabled {
 
 .synonyms-attribute__head,
 .synonyms-attribute__body {
-  line-height: 2.25;
+  line-height: 3;
 }
 
 .synonyms-attribute__body:hover {
@@ -655,6 +655,7 @@ button:disabled {
 .synonym-tag__container {
   margin-bottom: var(--spacing-4);
   display: flex;
+  flex-wrap: wrap;
 }
 
 .synonym__tag {
@@ -666,6 +667,7 @@ button:disabled {
   color: var(--white);
   display: flex;
   align-items: center;
+  margin-top: var(--spacing-2);
 }
 
 .synonym__delete {

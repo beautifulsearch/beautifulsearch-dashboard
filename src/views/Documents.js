@@ -8,6 +8,7 @@ import ClipLoader from 'react-spinners/ClipLoader';
 import ReactJson from 'react-json-view';
 import { useHistory } from "react-router-dom";
 import { setOnboarding } from "../store/global";
+import classNames from 'classnames';
 
 export default function Documents({ instance, core }) {
   const dispatch = useDispatch();
@@ -92,31 +93,12 @@ export default function Documents({ instance, core }) {
     reader.readAsText(file);
   }
 
-  const documentsPreview = () => {
-    setDocumentView(true);
-    let removeView = document.getElementById('documents-json');
-    removeView.classList.remove('documents-options--active');
-    let currentView = document.getElementById('documents-preview');
-    currentView.classList.add('documents-options--active');
-  }
-
-  const documentsJson = () => {
-    setDocumentView(false);
-    let removeView = document.getElementById('documents-preview');
-    removeView.classList.remove('documents-options--active');
-    let currentView = document.getElementById('documents-json');
-    currentView.classList.add('documents-options--active');
-  }
-
   const uploadCopiedJson = async () => {
     const solr = new Solr(instance, core);
     const fileName = "uploaded.json"
     try {
       await solr.uploadJson(fileName, JSON.parse(copiedJson));
       cogoToast.success('Json Uploaded successfully');
-      // dispatch(setOnboarding());
-      // await solr.setSidePanelValues(true, true);
-      // cogoToast.success("Task Completed Succefully");
       fetchDocuments();
       toggleJsonModal(false);
     } catch(e) {
@@ -143,8 +125,8 @@ export default function Documents({ instance, core }) {
         { documents.length > 0 ?
           <div>
             <div className="documents-view__options">
-              <div onClick={documentsPreview} id="documents-preview" className="documents-options--active document-options documents-options__preview">Preview</div>
-              <div onClick={documentsJson} id="documents-json" className="document-options documents-options__json">Json</div>
+              <div onClick={() => setDocumentView(true)} id="documents-preview" className={classNames({"document-options documents-options__preview": true, 'documents-options--active': documentView })}>Preview</div>
+              <div onClick={() => setDocumentView(false)} id="documents-json" className={classNames({"document-options documents-options__json": true, 'documents-options--active': !documentView })}>Json</div>
             </div>
             <div>
               { documentView ?

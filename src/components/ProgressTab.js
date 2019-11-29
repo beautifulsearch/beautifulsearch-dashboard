@@ -4,9 +4,27 @@ import { toggleSlidePanel } from "../store/global";
 
 export default function ProgressTab() {
   const dispatch = useDispatch();
-  let slidePanelStatus = useSelector(state => state.global.slidePanelStatus);
   let onboarding = useSelector(state => state.global.onboarding);
+  const [ taskProgress, setTaskProgress ] = useState({});
 
+  useEffect(() => {
+    const onboardingProgress = () => {
+      const taskKeys = Object.keys(onboarding);
+      const taskLength = taskKeys.length;
+      const taskValue = Object.values(onboarding);
+      let taskCompletedcount = 0;
+      taskValue.forEach( value => {
+        if(value === true) {
+          taskCompletedcount += taskCompletedcount;
+        }
+      })
+      const progress = (taskCompletedcount/taskLength)* 100;
+
+      const task = { tasksCount: taskLength, progress: progress, tasksCompleted: taskCompletedcount};
+      setTaskProgress(task);
+    }
+    onboardingProgress();
+  }, [onboarding]);
 
   const slidePanelToggle = () => {
     dispatch(toggleSlidePanel());
@@ -15,8 +33,8 @@ export default function ProgressTab() {
   return (
     <div className="progress-component" onClick={ slidePanelToggle } >
       <div className="progress-component__container">
-        <progress className="progress__bar" value={1} max="100"></progress>
-        <span className="progress-component__text">{`${1}/2 tasks completed`}</span>
+        <progress className="progress__bar" value={taskProgress.progress} max="100"></progress>
+        <span className="progress-component__text">{`${taskProgress.tasksCompleted}/${taskProgress.tasksCount} tasks completed`}</span>
         <i className="fas fa-chevron-right task-bar__arrow"></i>
       </div>
     </div>

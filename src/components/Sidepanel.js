@@ -8,6 +8,27 @@ export default function Sidepanel() {
   const dispatch = useDispatch();
   const history = useHistory();
   let onboarding = useSelector(state => state.global.onboarding);
+  const [ taskProgress, setTaskProgress ] = useState({});
+
+  useEffect(() => {
+    const onboardingProgress = () => {
+      const taskKeys = Object.keys(onboarding);
+      const taskLength = taskKeys.length;
+      const taskValue = Object.values(onboarding);
+      let taskCompletedcount = 0;
+      taskValue.forEach( value => {
+        if(value === true) {
+          taskCompletedcount += taskCompletedcount;
+        }
+      })
+      const progress = (taskCompletedcount/taskLength)* 100;
+      
+      const task = { tasksCount: taskLength, progress: progress, tasksCompleted: taskCompletedcount};
+      setTaskProgress(task);
+    }
+    onboardingProgress();
+  }, [onboarding]);
+
 
   const closeSlider = () => {
     dispatch(toggleSlidePanel());
@@ -28,8 +49,8 @@ export default function Sidepanel() {
 
         <div className="slide-panel__content">
           <div className="progress-bar__container">
-            <div className="progress-bar__text">{`${1}/2 tasks completed`}</div>
-            <progress className="panel-progress__bar" value={1} max="100"></progress>
+            <div className="progress-bar__text">{`${taskProgress.tasksCompleted}/${taskProgress.tasksCount} tasks completed`}</div>
+            <progress className="panel-progress__bar" value={taskProgress.progress} max="100"></progress>
           </div>
         </div>
 

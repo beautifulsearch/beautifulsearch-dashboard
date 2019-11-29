@@ -12,7 +12,6 @@ export default function Home({ instance, core }) {
   const history = useHistory();
   const cores = useSelector(state => state.global.cores) || [];
   const [newCoreName, setNewCoreName] = useState("");
-  useSelector(state => state.global.createCoreStatus);
 
   const handleInstanceChange = (e) => {
     const instance = e.target.value || "";
@@ -44,10 +43,17 @@ export default function Home({ instance, core }) {
   }
 
   const createCore = async () => {
-    const solr = new Solr(instance);
-    const { data } = await solr.createCore(newCoreName);
-    console.log(data);
-    dispatch(setCreateStoreStatus());
+    const solr = new Solr(instance, core);
+    try{
+      const { data } = await solr.createCore(newCoreName);
+      cogoToast.success(data.msg);
+      dispatch(setCreateStoreStatus());
+      await solr.setSidePanelValues(true, false);
+      cogoToast.success("Task Completed Succefully");
+    } catch(e) {
+      console.log(e)
+      // cogoToast.error(data.msg);
+    }
     onConnect();
   }
 

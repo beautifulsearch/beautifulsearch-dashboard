@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useEffect }  from 'react';
 // import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from "react-redux";
 import { BrowserRouter as Router, Switch, Route, } from "react-router-dom";
-
+import Solr from "./services/solr";
 // import Solr from "./services/solr";
 
 import Navigation from './components/Navigation';
@@ -22,8 +22,10 @@ import './assets/css/constants.css';
 import './App.css';
 import './assets/css/components/navigation.css';
 
+import { setCreateStoreStatus, setAddDocumentStatus } from "./store/global";
+
 function App() {
-  useDispatch();
+  const dispatch = useDispatch();
   const instance = useSelector(state => state.global.instance);
   const core = useSelector(state => state.global.core);
   const connected = useSelector(state => state.global.connected);
@@ -40,15 +42,21 @@ function App() {
   //   }
   // }
 
-  // useEffect(() => {
-  //   checkConnection();
-  //   const tracker = window.setInterval(checkConnection, (15*1000));
-  //   setStautsPoll(tracker);
+  useEffect(() => {
+    const fetchSliderValues = async () => {
+      const solr = new Solr(instance, core);
+      const data = await solr.getSidePanelValues();
+      const sidePanelValue = data.data.sidepanel;
+      if(sidePanelValue.createCoreStatus === true) {
+        dispatch(setCreateStoreStatus());
+      }
+      else if(sidePanelValue.addDocumentStatus === true) {
+        dispatch(setAddDocumentStatus());
+      }
+    }
 
-  //   return () => {
-  //     window.clearInterval(statusPoll);
-  //   }
-  // }, [])
+    fetchSliderValues();
+  }, [])
 
   return (
     <Router>

@@ -5,11 +5,13 @@ import cogoToast from "cogo-toast";
 import Solr from '../services/solr';
 import ClipLoader from 'react-spinners/ClipLoader';
 import ReactJson from 'react-json-view';
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
+import { useHistory } from "react-router-dom";
 import { setAddDocumentStatus } from "../store/global";
 
 export default function Documents({ instance, core }) {
   const dispatch = useDispatch();
+  const history = useHistory();
   const [ documents, setDocuments ] = useState([]);
   const [ optionToUpload, toggleOptionToUpload ] = useState(true);
   const [ jsonUpload, toggleJsonUpload ] = useState(true);
@@ -23,6 +25,9 @@ export default function Documents({ instance, core }) {
 
   useEffect(() => {
     fetchDocuments();
+    if(history.location.state) {
+      toggleJsonModal(true);
+    }
   }, []);
 
   const fetchDocuments = async () => {
@@ -69,6 +74,8 @@ export default function Documents({ instance, core }) {
       toggleJsonModal(false);
       cogoToast.success('File upload successfull');
       dispatch(setAddDocumentStatus());
+      cogoToast.success("Task Completed Succefully");
+      await solr.setSidePanelValues(true, true);
       fetchDocuments();
     } catch(e) {
       console.log(e);
@@ -107,7 +114,9 @@ export default function Documents({ instance, core }) {
     try {
       await solr.uploadJson(fileName, JSON.parse(copiedJson));
       cogoToast.success('Json Uploaded successfully');
-      dispatch(setAddDocumentStatus());
+      // dispatch(setAddDocumentStatus());
+      // await solr.setSidePanelValues(true, true);
+      // cogoToast.success("Task Completed Succefully");
       fetchDocuments();
       toggleJsonModal(false);
     } catch(e) {

@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from "react-redux";
 import { toggleSlidePanelDeactive } from "../store/global";
+import { useHistory } from "react-router-dom";
 
 export default function Sidepanel() {
   const dispatch = useDispatch();
+  const history = useHistory();
   let slidePanelStatus = useSelector(state => state.global.slidePanelStatus);
   let createCoreStatus = useSelector(state => state.global.createCoreStatus);
   let addDocumentStatus = useSelector(state => state.global.addDocumentStatus);
@@ -42,6 +44,11 @@ export default function Sidepanel() {
         }
       }
     }
+  }
+
+  const uploadRecord = () => {
+    dispatch(toggleSlidePanelDeactive());
+    history.push('/documents','sidepanel');
   }
 
   return (
@@ -85,7 +92,7 @@ export default function Sidepanel() {
           <div id="panel-record" className="panel-text__container">
             <div id="panel-add-text" className="slide-panel__text">Add records to search</div>
             <div className="slide-panel__body">Records are the information that you want to make searchable. You can push data via the API or through our Dashboard UI.</div>
-            <button className="button--primary panel-upload__link" disabled={addDocumentStatus}>Upload record(s)</button>
+            <button className="button--primary panel-upload__link" onClick={uploadRecord} disabled={addDocumentStatus}>Upload record(s)</button>
           </div>
         </div>
       </div>

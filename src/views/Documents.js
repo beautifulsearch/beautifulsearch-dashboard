@@ -7,7 +7,7 @@ import Solr from '../services/solr';
 import ClipLoader from 'react-spinners/ClipLoader';
 import ReactJson from 'react-json-view';
 import { useHistory } from "react-router-dom";
-import { setOnboardingDetails } from "../store/global";
+import { setOnboarding } from "../store/global";
 
 export default function Documents({ instance, core }) {
   const dispatch = useDispatch();
@@ -74,9 +74,8 @@ export default function Documents({ instance, core }) {
       await solr.completeImport(fileName, idField);
       toggleJsonModal(false);
       cogoToast.success('File upload successfull');
-      dispatch(setOnboardingDetails({ documentImported: true }));
+      dispatch(setOnboarding({ ...onboarding, documentImported: true }));
       cogoToast.success("Task Completed Succefully");
-      await solr.setConfiguration({ ...onboarding, documentImported: true });
       fetchDocuments();
     } catch(e) {
       console.log(e);
@@ -115,7 +114,7 @@ export default function Documents({ instance, core }) {
     try {
       await solr.uploadJson(fileName, JSON.parse(copiedJson));
       cogoToast.success('Json Uploaded successfully');
-      // dispatch(setOnboardingDetails());
+      // dispatch(setOnboarding());
       // await solr.setSidePanelValues(true, true);
       // cogoToast.success("Task Completed Succefully");
       fetchDocuments();

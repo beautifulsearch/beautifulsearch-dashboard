@@ -1,9 +1,6 @@
-import React, { useEffect }  from 'react';
-// import React, { useEffect, useState } from 'react';
-import { useSelector, useDispatch } from "react-redux";
+import React from 'react';
+import { useSelector } from "react-redux";
 import { BrowserRouter as Router, Switch, Route, } from "react-router-dom";
-import Solr from "./services/solr";
-// import Solr from "./services/solr";
 
 import Navigation from './components/Navigation';
 import Sidepanel from './components/Sidepanel';
@@ -22,10 +19,7 @@ import './assets/css/constants.css';
 import './App.css';
 import './assets/css/components/navigation.css';
 
-import { setOnboardingDetails } from "./store/global";
-
 function App() {
-  const dispatch = useDispatch();
   const instance = useSelector(state => state.global.instance);
   const core = useSelector(state => state.global.core);
   const connected = useSelector(state => state.global.connected) || true;
@@ -41,17 +35,6 @@ function App() {
   //     dispatch(disconnect());
   //   }
   // }
-
-
-  useEffect(() => {
-    const fetchSliderValues = async () => {
-      const solr = new Solr(instance, core);
-      const data = await solr.getConfiguration('onboarding');
-      dispatch(setOnboardingDetails(data.data.onboarding));
-    }
-
-    fetchSliderValues();
-  }, [])
 
   return (
     <Router>

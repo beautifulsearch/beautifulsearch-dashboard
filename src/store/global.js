@@ -1,9 +1,12 @@
+import Solr from "../services/solr";
+
 export const SET_INSTANCE = "SET_INSTANCE";
 export const LIST_CORES = "LIST_CORES";
 export const SET_CORE = "SET_CORE";
 export const CONNECT = "CONNECT";
 export const DISCONNECT = "DISCONNECT";
-export const SET_ONBOARDING_DETAILS = "SET_ONBOARDING_DETAILS";
+export const SET_ONBOARDING = "SET_ONBOARDING";
+export const FETCH_ONBOARDING = "FETCH_ONBOARDING";
 export const TOGGLE_SLIDE_PANEL = "TOGGLE_SLIDE_PANEL";
 
 
@@ -49,11 +52,27 @@ export function setCore(core) {
   }
 }
 
-export function setOnboardingDetails(onboardingDetails={}) {
-  return (dispatch) => {
+export function setOnboarding(onboarding={}) {
+  return async (dispatch, getState) => {
+    const { instance, core } = getState();
+    const solr = new Solr(instance, core);
+    await solr.setConfiguration({ onboarding });
     dispatch({
-      type: SET_ONBOARDING_DETAILS,
-      onboardingDetails
+      type: SET_ONBOARDING,
+      onboarding
+    });
+  }
+}
+
+export function fetchOnboarding() {
+  return async (dispatch, getState) => {
+    const { global } = getState();
+    const { instance, core } = global;
+    const solr = new Solr(instance, core);
+    const { data } = await solr.getConfiguration('onboarding');
+    dispatch({
+      type: FETCH_ONBOARDING,
+      onboarding: data.onboarding
     });
   }
 }
@@ -94,8 +113,10 @@ export default function globalReducer(state = defaultState, action = {}) {
       return { ...state, connected: true };
     case DISCONNECT:
       return { ...state, connected: false };
-    case SET_ONBOARDING_DETAILS:
-      return { ...state, onboarding: { ...state.onboarding, ...action.onboardingDetails } };
+    case FETCH_ONBOARDING:
+      return { ...state, onboarding: { ...state.onboarding, ...action.onboarding } };
+    case SET_ONBOARDING:
+      return { ...state, onboarding: { ...state.onboarding, ...action.onboarding } };
     case TOGGLE_SLIDE_PANEL:
       return { ...state, slidePanelStatus: !state.slidePanelStatus };
     default:

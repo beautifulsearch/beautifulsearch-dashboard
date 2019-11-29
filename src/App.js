@@ -22,13 +22,13 @@ import './assets/css/constants.css';
 import './App.css';
 import './assets/css/components/navigation.css';
 
-import { setCreateStoreStatus, setAddDocumentStatus } from "./store/global";
+import { setOnboardingDetails } from "./store/global";
 
 function App() {
   const dispatch = useDispatch();
   const instance = useSelector(state => state.global.instance);
   const core = useSelector(state => state.global.core);
-  const connected = useSelector(state => state.global.connected);
+  const connected = useSelector(state => state.global.connected) || true;
   let slidePanelStatus = useSelector(state => state.global.slidePanelStatus);
   // const [statusPoll, setStautsPoll] = useState(null);
 
@@ -42,17 +42,12 @@ function App() {
   //   }
   // }
 
+
   useEffect(() => {
     const fetchSliderValues = async () => {
       const solr = new Solr(instance, core);
-      const data = await solr.getSidePanelValues();
-      const sidePanelValue = data.data.sidepanel;
-      if(sidePanelValue.createCoreStatus === true) {
-        dispatch(setCreateStoreStatus());
-      }
-      else if(sidePanelValue.addDocumentStatus === true) {
-        dispatch(setAddDocumentStatus());
-      }
+      const data = await solr.getConfiguration('onboarding');
+      dispatch(setOnboardingDetails(data.data.onboarding));
     }
 
     fetchSliderValues();
@@ -63,9 +58,7 @@ function App() {
       <div>
         <Navigation />
         <ProgressTab />
-        {
-          slidePanelStatus && <Sidepanel /> 
-        }
+        { slidePanelStatus && <Sidepanel /> }
 
         {!connected && <div>Check your connection</div>}
         <div className="matter">

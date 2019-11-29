@@ -1,53 +1,43 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from "react-redux";
-import { toggleSlidePanelDeactive } from "../store/global";
+import { toggleSlidePanel } from "../store/global";
 import { useHistory } from "react-router-dom";
 
 export default function Sidepanel() {
   const dispatch = useDispatch();
   const history = useHistory();
   let slidePanelStatus = useSelector(state => state.global.slidePanelStatus);
-  let createCoreStatus = useSelector(state => state.global.createCoreStatus);
-  let addDocumentStatus = useSelector(state => state.global.addDocumentStatus);
-  let [ currentTaskProgress, setCurrentTaskProgress ] = useState(0);
-  let [ taskCompletionCount, setTaskCompletionCount ] = useState(0);
-
-  useEffect(() => {
-    checkingTaskStatus();
-  }, [ createCoreStatus, addDocumentStatus, slidePanelStatus]);
+  let onboarding = useSelector(state => state.global.onboarding);
 
   const closeSlider = () => {
-    if(slidePanelStatus === true) {
-      dispatch(toggleSlidePanelDeactive());
-    }
+    dispatch(toggleSlidePanel());
   }
+
+
+  // TODO: remove this and use react classes for dynamic classnames
   const checkingTaskStatus = () => {
     if(slidePanelStatus === true ) {
-      if(createCoreStatus === true ) {
+      if(onboarding.coreCreated === true ) {
         let createCore = document.getElementById('panel-create-core');
         createCore.classList.add('slide-panel__checkbox--active');
         let createCoreText = document.getElementById('panel-create-text');
         createCoreText.classList.add('slide-panel__text--active');
         let panelCore = document.getElementById('panel-core');
         panelCore.classList.add('slide-panel__content--active');
-        setCurrentTaskProgress(25);
-        setTaskCompletionCount(1)
-        if(addDocumentStatus === true) {
+        if(onboarding.documentImported === true) {
           let createCore = document.getElementById('panel-add-record');
           createCore.classList.add('slide-panel__checkbox--active');
           let createCoreText = document.getElementById('panel-add-text');
           createCoreText.classList.add('slide-panel__text--active');
           let panelCore = document.getElementById('panel-record');
           panelCore.classList.add('slide-panel__content--active');
-          setCurrentTaskProgress(50);
-          setTaskCompletionCount(2)
         }
       }
     }
   }
 
   const uploadRecord = () => {
-    dispatch(toggleSlidePanelDeactive());
+    dispatch(toggleSlidePanel());
     history.push('/documents','sidepanel');
   }
 
@@ -60,15 +50,15 @@ export default function Sidepanel() {
         </div>
         <div className="slide-panel__content">
           <div className="progress-bar__container">
-            <div className="progress-bar__text">{`${taskCompletionCount}/2 tasks completed`}</div>
-            <progress className="panel-progress__bar" value={currentTaskProgress} max="100"></progress>
+            <div className="progress-bar__text">{`${1}/2 tasks completed`}</div>
+            <progress className="panel-progress__bar" value={1} max="100"></progress>
           </div>
-        </div> 
+        </div>
         <div className="slide-panel__content">
           <div className="panel-checkbox__container">
             <div id="panel-create-core">
               {
-                createCoreStatus ? 
+                onboarding.coreCreated ?
                 <i className="fas fa-check-circle"></i> :
                 <p className="slide-panel__checkbox"></p>
               }
@@ -83,7 +73,7 @@ export default function Sidepanel() {
           <div className="panel-checkbox__container">
             <div id="panel-add-record">
               {
-                addDocumentStatus ? 
+                onboarding.documentImported ?
                 <i className="fas fa-check-circle"></i> :
                 <p className="slide-panel__checkbox"></p>
               }
@@ -92,7 +82,7 @@ export default function Sidepanel() {
           <div id="panel-record" className="panel-text__container">
             <div id="panel-add-text" className="slide-panel__text">Add records to search</div>
             <div className="slide-panel__body">Records are the information that you want to make searchable. You can push data via the API or through our Dashboard UI.</div>
-            <button className="button--primary panel-upload__link" onClick={uploadRecord} disabled={addDocumentStatus}>Upload record(s)</button>
+            <button className="button--primary panel-upload__link" onClick={uploadRecord}>Upload record(s)</button>
           </div>
         </div>
       </div>

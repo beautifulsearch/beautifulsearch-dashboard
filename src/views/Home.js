@@ -5,7 +5,7 @@ import cogoToast from "cogo-toast";
 
 // import Solr from "solr-admin-client";
 import Solr from "../services/solr";
-import { setInstance, connect, listCores, setCore, setCreateStoreStatus } from "../store/global";
+import { setInstance, connect, listCores, setCore, setOnboardingDetails } from "../store/global";
 
 export default function Home({ instance, core }) {
   const dispatch = useDispatch();
@@ -47,7 +47,7 @@ export default function Home({ instance, core }) {
     try{
       const { data } = await solr.createCore(newCoreName);
       cogoToast.success(data.msg);
-      dispatch(setCreateStoreStatus());
+      dispatch(setOnboardingDetails({ coreCreated: true }));
       await solr.setSidePanelValues(true, false);
       cogoToast.success("Task Completed Succefully");
     } catch(e) {

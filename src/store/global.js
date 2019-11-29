@@ -3,10 +3,8 @@ export const LIST_CORES = "LIST_CORES";
 export const SET_CORE = "SET_CORE";
 export const CONNECT = "CONNECT";
 export const DISCONNECT = "DISCONNECT";
-export const SET_CREATE_STORE_STATUS = "SET_CREATE_STORE_STATUS";
-export const SET_DOCUMENT_STATUS = "SET_DOCUMENT_STATUS";
-export const SLIDE_PANEL_STATUS_ACTIVE = "SLIDE_PANEL_STATUS_ACTIVE";
-export const SLIDE_PANEL_STATUS_DEACTIVE = "SLIDE_PANEL_STATUS_DEACTIVE";
+export const SET_ONBOARDING_DETAILS = "SET_ONBOARDING_DETAILS";
+export const TOGGLE_SLIDE_PANEL = "TOGGLE_SLIDE_PANEL";
 
 
 export function setInstance(instance) {
@@ -51,37 +49,23 @@ export function setCore(core) {
   }
 }
 
-export function setCreateStoreStatus() {
+export function setOnboardingDetails(onboardingDetails={}) {
   return (dispatch) => {
     dispatch({
-      type: SET_CREATE_STORE_STATUS
-    })
+      type: SET_ONBOARDING_DETAILS,
+      onboardingDetails
+    });
   }
 }
 
-export function setAddDocumentStatus() {
-  return (dispatch) => {
+export function toggleSlidePanel() {
+  return dispatch => {
     dispatch({
-      type: SET_DOCUMENT_STATUS
-    })
-  }
+      type: TOGGLE_SLIDE_PANEL
+    });
+  };
 }
 
-export function toggleSlidePanelActive() {
-  return (dispatch) => {
-    dispatch({
-      type: SLIDE_PANEL_STATUS_ACTIVE
-    })
-  }
-}
-
-export function toggleSlidePanelDeactive() {
-  return (dispatch) => {
-    dispatch({
-      type: SLIDE_PANEL_STATUS_DEACTIVE
-    })
-  }
-}
 
 const defaultState = {
   connected: false,
@@ -90,7 +74,11 @@ const defaultState = {
   core: JSON.parse(window.localStorage.getItem("core")),
   slidePanelStatus: false,
   createCoreStatus: false,
-  addDocumentStatus: false
+  addDocumentStatus: false,
+  onboarding: {
+    coreCreated: false,
+    documentImported: false
+  }
 };
 
 
@@ -106,14 +94,10 @@ export default function globalReducer(state = defaultState, action = {}) {
       return { ...state, connected: true };
     case DISCONNECT:
       return { ...state, connected: false };
-    case SET_CREATE_STORE_STATUS:
-      return { ...state, createCoreStatus: true };
-    case SET_DOCUMENT_STATUS:
-      return { ...state, addDocumentStatus: true };
-    case SLIDE_PANEL_STATUS_ACTIVE:
-      return { ...state, slidePanelStatus: true };
-    case SLIDE_PANEL_STATUS_DEACTIVE:
-      return { ...state, slidePanelStatus: false };
+    case SET_ONBOARDING_DETAILS:
+      return { ...state, onboarding: { ...state.onboarding, ...action.onboardingDetails } };
+    case TOGGLE_SLIDE_PANEL:
+      return { ...state, slidePanelStatus: !state.slidePanelStatus };
     default:
       return state;
   }

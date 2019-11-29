@@ -111,19 +111,12 @@ export default class Solr {
     return this.instance.post(`/${this.core}/schema`, params);
   }
 
-  setSidePanelValues(step1,step2) {
-    const params = {
-      "sidepanel": {
-        createCoreStatus: step1,
-        addDocumentStatus: step2
-      }
-    };
-
-    return this.instance.post(`/${this.core}/schema/beautifulsearch`, params);
+  setConfiguration(configuration) {
+    return this.instance.post(`/${this.core}/schema/beautifulsearch`, configuration);
   }
 
-  getSidePanelValues() {
-    return this.instance.get(`/${this.core}/schema/beautifulsearch/sidepanel`);
+  getConfiguration(key) {
+    return this.instance.get(`/${this.core}/schema/beautifulsearch/${key}`);
   }
 
   addSynonym(synonymValue) {

@@ -7,7 +7,7 @@ import ClipLoader from 'react-spinners/ClipLoader';
 import ReactJson from 'react-json-view';
 import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
-import { setAddDocumentStatus } from "../store/global";
+import { setOnboardingDetails } from "../store/global";
 
 export default function Documents({ instance, core }) {
   const dispatch = useDispatch();
@@ -73,7 +73,7 @@ export default function Documents({ instance, core }) {
       await solr.completeImport(fileName, idField);
       toggleJsonModal(false);
       cogoToast.success('File upload successfull');
-      dispatch(setAddDocumentStatus());
+      dispatch(setOnboardingDetails({ documentImported: true }));
       cogoToast.success("Task Completed Succefully");
       await solr.setSidePanelValues(true, true);
       fetchDocuments();
@@ -114,7 +114,7 @@ export default function Documents({ instance, core }) {
     try {
       await solr.uploadJson(fileName, JSON.parse(copiedJson));
       cogoToast.success('Json Uploaded successfully');
-      // dispatch(setAddDocumentStatus());
+      // dispatch(setOnboardingDetails());
       // await solr.setSidePanelValues(true, true);
       // cogoToast.success("Task Completed Succefully");
       fetchDocuments();

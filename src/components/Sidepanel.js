@@ -1,71 +1,93 @@
 import React, { useEffect, useState } from 'react';
+import classNames from 'classnames';
+import { useSelector, useDispatch } from "react-redux";
+import { toggleSlidePanel } from "../store/global";
+import { useHistory } from "react-router-dom";
 
 export default function Sidepanel() {
-  let [ slideVisible, toggleSlideVisible ] = useState(false);
+  const dispatch = useDispatch();
+  const history = useHistory();
+  let onboarding = useSelector(state => state.global.onboarding);
+  const [ taskProgress, setTaskProgress ] = useState({});
 
   useEffect(() => {
-    dragSlider();
-  }, []);
+    const onboardingProgress = () => {
+      const taskKeys = Object.keys(onboarding);
+      const taskLength = taskKeys.length;
+      const taskValue = Object.values(onboarding);
+      let taskCompletedcount = 0;
+      taskValue.forEach( value => {
+        if(value === true) {
+          taskCompletedcount += taskCompletedcount;
+        }
+      })
+      const progress = (taskCompletedcount/taskLength)* 100;
+      
+      const task = { tasksCount: taskLength, progress: progress, tasksCompleted: taskCompletedcount};
+      setTaskProgress(task);
+    }
+    onboardingProgress();
+  }, [onboarding]);
 
-  const dragSlider = () => {
-    let currentElement  = document.getElementById('slide-panel-overlay');
-    currentElement.classList.remove('slide-panel__overlay');
-    toggleSlideVisible(false);
+
+  const closeSlider = () => {
+    dispatch(toggleSlidePanel());
+  }
+
+  const uploadRecord = () => {
+    dispatch(toggleSlidePanel());
+    history.push('/documents','sidepanel');
   }
 
   return (
     <div id="slide-panel-overlay" className="slide-panel__overlay">
-      { slideVisible &&
-        <div className="slide__panel slide__panel--visible">
-          <div className="slide-panel__heading">
-            <h2 style={{marginLeft: "20"}}>Sample task List</h2>
-            <span className="close" onClick={dragSlider}>×</span>
+      <div className="slide__panel slide__panel--visible">
+        <div className="slide-panel__heading">
+          <h2 style={{marginLeft: "20"}}>Sample task List</h2>
+          <span className="close" onClick={closeSlider}>×</span>
+        </div>
+
+        <div className="slide-panel__content">
+          <div className="progress-bar__container">
+            <div className="progress-bar__text">{`${taskProgress.tasksCompleted}/${taskProgress.tasksCount} tasks completed`}</div>
+            <progress className="panel-progress__bar" value={taskProgress.progress} max="100"></progress>
           </div>
-          <div className="slide-panel__content">
-            <div className="progress-bar__container">
-              <div className="progress-bar__text">1/4 tasks completed</div>
-              <progress className="panel-progress__bar" value="25" max="100"></progress>
-            </div>
-          </div> 
-          <div className="slide-panel__content">
-            <div className="panel-checkbox__container">
-              <p className="slide-panel__checkbox"></p>  
-            </div>
-            <div className="panel-text__container">
-              <div className="slide-panel__text">Create an index</div>
-              <div className="slide-panel__body">An index stores the data that you want to make searchable in name.</div>
-            </div>
-          </div>
-          <div className="slide-panel__content">
-            <div className="panel-checkbox__container">
-              <p className="slide-panel__checkbox"></p>
-            </div>
-            <div className="panel-text__container">
-              <div className="slide-panel__text">Add records to search</div>
-              <div className="slide-panel__body">Records are the information that you want to make searchable. You can push data via the API or through our Dashboard UI.</div>
-              <button className="button--primary panel-upload__link">Upload record(s)</button>
+        </div>
+
+
+        <div className={classNames({"slide-panel__content": true, "slide-panel__content--checked": onboarding.coreCreated})}>
+          <div className="panel-checkbox__container">
+            <div id="panel-create-core">
+              {
+                onboarding.coreCreated ?
+                <i className="fas fa-check-circle"></i> :
+                <p className="slide-panel__checkbox"></p>
+              }
             </div>
           </div>
-          <div className="slide-panel__content">
-            <div className="panel-checkbox__container">
-              <p className="slide-panel__checkbox"></p>  
-            </div>
-            <div className="panel-text__container">
-              <div className="slide-panel__text">Configure searchable attributes</div>
-              <div className="slide-panel__body">Select the attributes of your data that you want to make searchable. See guide for more details.</div>
+          <div id="panel-core" className="panel-text__container">
+            <div id="panel-create-text" className="slide-panel__text">Create a core</div>
+            <div className="slide-panel__body">A core stores the data that you want to make searchable in name.</div>
+          </div>
+        </div>
+
+        <div className={classNames({"slide-panel__content": true, "slide-panel__content--checked": onboarding.documentImported})}>
+          <div className="panel-checkbox__container">
+            <div id="panel-add-record">
+              {
+                onboarding.documentImported ?
+                <i className="fas fa-check-circle"></i> :
+                <p className="slide-panel__checkbox"></p>
+              }
             </div>
           </div>
-          <div className="slide-panel__content">
-            <div className="panel-checkbox__container">
-              <p className="slide-panel__checkbox"></p>  
-            </div>
-            <div className="panel-text__container">
-              <div className="slide-panel__text">Configure custom ranking</div>
-              <div className="slide-panel__body">Use a custom ranking attribute to order your results by a metric that's important to your business goals. See guide for more details.</div>
-            </div>
+          <div id="panel-record" className="panel-text__container">
+            <div id="panel-add-text" className="slide-panel__text">Add records to search</div>
+            <div className="slide-panel__body">Records are the information that you want to make searchable. You can push data via the API or through our Dashboard UI.</div>
+            <button className="button--primary panel-upload__link" onClick={uploadRecord}>Upload record(s)</button>
           </div>
-        </div>  
-      }
+        </div>
+      </div>
     </div>
   );
 }

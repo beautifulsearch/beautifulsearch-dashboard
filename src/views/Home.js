@@ -5,12 +5,14 @@ import cogoToast from "cogo-toast";
 
 // import Solr from "solr-admin-client";
 import Solr from "../services/solr";
-import { setInstance, connect, listCores, setCore } from "../store/global";
+import { setInstance, connect, listCores, setCore, setOnboarding, fetchOnboarding } from "../store/global";
 
 export default function Home({ instance, core }) {
   const dispatch = useDispatch();
   const history = useHistory();
   const cores = useSelector(state => state.global.cores) || [];
+  const onboarding = useSelector(state => state.global.onboarding);
+
   const [newCoreName, setNewCoreName] = useState("");
 
   const handleInstanceChange = (e) => {
@@ -30,6 +32,7 @@ export default function Home({ instance, core }) {
       cogoToast.success("Connection to Solr successful");
       dispatch(connect());
       dispatch(listCores(cores));
+      dispatch(fetchOnboarding());
     } catch(e) {
       console.log(e);
       cogoToast.error(e.message || "Failed to connect to the Solr instance");
@@ -43,9 +46,16 @@ export default function Home({ instance, core }) {
   }
 
   const createCore = async () => {
-    const solr = new Solr(instance);
-    const { data } = await solr.createCore(newCoreName);
-    console.log(data);
+    const solr = new Solr(instance, core);
+    try{
+      const { data } = await solr.createCore(newCoreName);
+      cogoToast.success(data.msg);
+      dispatch(setOnboarding({ ...onboarding, coreCreated: true }));
+      cogoToast.success("Task Completed Succefully");
+    } catch(e) {
+      console.log(e)
+      // cogoToast.error(data.msg);
+    }
     onConnect();
   }
 

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import Switch from "react-switch";
+import classNames from 'classnames';
 
 export default function Relevance() {
 
@@ -7,19 +8,13 @@ let [ dropdown, toggleDropdownValue ] = useState(false);
 let [ checked, toggleSwitchValue ] = useState(true);
 let [ weightValue, toggleWeightValue ] = useState();
 
-const editAttributes = (e) => {
-  let currentElement = e.currentTarget;
-  let parentElement  = currentElement.parentNode;
+const editAttributes = () => {
   if(dropdown === false) {
     toggleDropdownValue(true);
     dropdown = true;
-    parentElement.classList.add('relevance-edit');
-    currentElement.classList.add('relevance-edit__settings');
   } else {
       toggleDropdownValue(false);
       dropdown = false;
-      parentElement.classList.remove('relevance-edit');
-      currentElement.classList.remove('relevance-edit__settings');
   }
 }
 
@@ -52,8 +47,8 @@ let relevanceAttributesToReturn = [];
 
 relevanceAttributes.forEach((val, index) => {
   relevanceAttributesToReturn.push(
-    <div key={index}>
-      <div onClick={editAttributes} id={index} className="relevance-attributes__container">
+    <div key={index} className={classNames({'relevance-edit': dropdown})}>
+      <div onClick={editAttributes} id={index} className={classNames({"relevance-attributes__container":true, 'relevance-edit__settings': dropdown})}>
         <div className="relevance__attribute"> 
           <div className="relevance-attribute__name">{val}</div>
           <div className="relevance-attribute__type">type</div>

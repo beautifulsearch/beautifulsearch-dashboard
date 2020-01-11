@@ -1,11 +1,19 @@
 import React, { useEffect, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import JsonEditor from '../components/JsonEditor';
 import Modal from 'react-modal';
 import cogoToast from "cogo-toast";
 import Solr from '../services/solr';
-
+import ClipLoader from 'react-spinners/ClipLoader';
+import ReactJson from 'react-json-view';
+import { useHistory } from "react-router-dom";
+import { setOnboarding } from "../store/global";
+import classNames from 'classnames';
 
 export default function Documents({ instance, core }) {
+  const dispatch = useDispatch();
+  const history = useHistory();
+  const onboarding = useSelector(state => state.global.onboarding);
   const [ documents, setDocuments ] = useState([]);
   const [ optionToUpload, toggleOptionToUpload ] = useState(true);
   const [ jsonUpload, toggleJsonUpload ] = useState(true);
@@ -14,9 +22,14 @@ export default function Documents({ instance, core }) {
   const [ working, setWorking ] = useState(false);
   const [ idField, setIdField ] = useState('');
   const [ file, setFile ] = useState();
+  const [ documentView, setDocumentView ] = useState(true);
+  const [ copiedJson, setCopiedJson ] = useState([]);
 
   useEffect(() => {
     fetchDocuments();
+    if(history.location.state) {
+      toggleJsonModal(true);
+    }
   }, []);
 
   const fetchDocuments = async () => {
@@ -62,6 +75,8 @@ export default function Documents({ instance, core }) {
       await solr.completeImport(fileName, idField);
       toggleJsonModal(false);
       cogoToast.success('File upload successfull');
+      dispatch(setOnboarding({ ...onboarding, documentImported: true }));
+      cogoToast.success("Task Completed Succefully");
       fetchDocuments();
     } catch(e) {
       console.log(e);
@@ -78,6 +93,21 @@ export default function Documents({ instance, core }) {
     reader.readAsText(file);
   }
 
+  const uploadCopiedJson = async () => {
+    const solr = new Solr(instance, core);
+    const fileName = "uploaded.json"
+    try {
+      await solr.uploadJson(fileName, JSON.parse(copiedJson));
+      cogoToast.success('Json Uploaded successfully');
+      fetchDocuments();
+      toggleJsonModal(false);
+    } catch(e) {
+      const schemaFields = Object.keys(e.response.data.schema);
+      setSchemaFields(schemaFields);
+      setWorking(false);
+    }
+  }
+
   return (
     <div className="documents">
       <div className="documents__container">
@@ -92,26 +122,66 @@ export default function Documents({ instance, core }) {
         </div>
       </div>
       <div className="documents-attribute__container">
-        {documents.map(document => (
-          <div className="documents__attributes" key={document.id}>
-            <p style={{ color: "#b8c2cc" }}>
-              ID <span style={{ color: "#8795a1" }}>{document.id}</span>
-            </p>
-            <table className="documents-attribute__table">
-              <tbody>
-                {
-                  Object.keys(document).map(key => (
-                  <tr className="document__attribute" key={key}>
-                    <td>{key}</td>
-                    <td style={{ color: "#b8c2cc" }}> => </td>
-                    <td style={{ fontWeight: "400" }}>{document[key]}</td>
-                  </tr>
-                  ))
-                }
-              </tbody>
-            </table>
+        { documents.length > 0 ?
+          <div>
+            <div className="documents-view__options">
+              <div onClick={() => setDocumentView(true)} id="documents-preview" className={classNames({"document-options documents-options__preview": true, 'documents-options--active': documentView })}>Preview</div>
+              <div onClick={() => setDocumentView(false)} id="documents-json" className={classNames({"document-options documents-options__json": true, 'documents-options--active': !documentView })}>Json</div>
+            </div>
+            <div>
+              { documentView ?
+                documents.map(document => (
+                  <div className="documents__attributes" key={document.id}>
+                    <div className="documents__header">
+                      <p style={{ color: "#b8c2cc" }}>
+                        ID <span style={{ color: "#8795a1", fontWeight: "500" }}>{document.id}</span>
+                      </p>
+                      <div className="documents-image__container">
+                        <img src={document.image} className="documents__image" alt="link preview"></img>
+                      </div>
+                    </div>
+                    <table className="documents-attribute__table">
+                      <tbody>
+                        {
+                          Object.keys(document).map(key => (
+                          <tr className="document__attribute" key={key}>
+                            <td><div className="document-attribute__value">{key}</div></td>
+                            <td> :- </td>
+                            <td className="document-attribute__description">{document[key]}</td>
+                          </tr>
+                          ))
+                        }
+                      </tbody>
+                    </table>
+                    <div className="documents__action">
+                      <div className="documents-action__box"><i className="fas fa-edit"></i></div>
+                      <div className="documents-action__box"><i className="fas fa-trash"></i></div>
+                    </div>
+                  </div>
+                )) :
+                <div>
+                  {
+                    documents.map(document => (
+                      <div key={document.id} className="documents-json__card">
+                        <div className="documents-json__header">
+                          ID <span style={{ color: "#8795a1", fontWeight: "500" }}>{document.id}</span>
+                        </div>
+                        <ReactJson src={document} theme="hopscotch" />
+                      </div>
+                    ))
+                  }
+                </div>
+              }
+            </div>
+          </div> :
+          <div className="schema-container__loader">
+            <ClipLoader
+              sizeUnit={"px"}
+              size={50}
+              color={'#123abc'}
+              loading={true}/>
           </div>
-        ))}
+        }
       </div>
       <Modal
         isOpen={showingJsonModal}
@@ -186,7 +256,7 @@ export default function Documents({ instance, core }) {
             <div>
               {jsonUpload ? (
                 <div>
-                  <JsonEditor></JsonEditor>
+                  <JsonEditor updateParent={ (json) => setCopiedJson(json) }></JsonEditor>
                   <div className="synonym-modal__button">
                     <button
                       onClick={onClosingModal}
@@ -194,7 +264,7 @@ export default function Documents({ instance, core }) {
                     >
                       Cancel
                     </button>
-                    <button className="button--primary continue__button">
+                    <button onClick={uploadCopiedJson} className="button--primary continue__button">
                       Continue
                     </button>
                   </div>

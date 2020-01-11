@@ -40,13 +40,11 @@ export default class Solr {
 
   createCore(name, instance_dir = "", config_set = "_default") {
     const params = {
-      "action": "CREATE",
-      "name": name,
-      "instance_dir": instance_dir,
-      "configSet": config_set
+      "action": "create-core",
+      "core": name
     };
 
-    return this.instance.get("/admin/cores", { params });
+    return this.instance.get("/beautifulsearch_template/beautifulsearch", { params });
   }
 
   getStatus() {
@@ -111,5 +109,25 @@ export default class Solr {
     };
 
     return this.instance.post(`/${this.core}/schema`, params);
+  }
+
+  setConfiguration(configuration) {
+    return this.instance.post(`/${this.core}/schema/beautifulsearch`, configuration);
+  }
+
+  getConfiguration(key) {
+    return this.instance.get(`/${this.core}/schema/beautifulsearch/${key}`);
+  }
+
+  addSynonym(synonymValue) {
+    return this.instance.post(`/${this.core}/schema/analysis/beautifulsearch/synonyms/english`, synonymValue);
+  }
+
+  fetchSynonym() {
+    return this.instance.get(`/${this.core}/schema/analysis/beautifulsearch/synonyms/english`);
+  }
+
+  deleteSynonymEntry(index) {
+    return this.instance.delete(`/${this.core}/schema/analysis/beautifulsearch/synonyms/english/${index}`);
   }
 }
